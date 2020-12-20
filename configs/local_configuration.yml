@@ -17,7 +17,7 @@ root:
       default:
         factory: "db_GameDal"
         configuration:
-          connectionstring: "jhkhdfshjfkljsfkl"
+          connectionstring: "cnn"
 
       inmemory:
         factory: "inmemory_GameDal"
@@ -31,3 +31,13 @@ root:
         - bomb: "1,1"
         - bomb: "1,2"
         - bomb: "1,3"
+
+
+
+
+
+
+
+
+
+

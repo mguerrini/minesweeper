@@ -9,3 +9,17 @@ type CellData struct {
 	Number    int      `json:"number"`
 }
 
+
+func (this *CellData) Hide() {
+	if this.IsReveled {
+		return
+	}
+
+	this.Type = CellType_Unknown
+	this.Number =-1
+}
+
+func (this *CellData) Reveal() {
+	this.IsReveled = true;
+	this.IsMarked = false
+}

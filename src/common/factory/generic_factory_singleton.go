@@ -1,7 +1,5 @@
 package factory
 
-
-
 import "sync"
 
 var (
