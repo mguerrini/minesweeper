@@ -13,7 +13,7 @@ type Game struct {
 }
 
 
-func NewGame(rowCount, colCount int, bombCount int, bombLocator BombLocator) Game {
+func NewGame(rowCount, colCount int, bombCount int, bombLocator BombLocator) (Game, error) {
 	board := NewBoard(rowCount, colCount)
 
 	game := Game{
@@ -26,11 +26,15 @@ func NewGame(rowCount, colCount int, bombCount int, bombLocator BombLocator) Gam
 		board: board,
 	}
 
-	bombLocator.SetBombs(&game, bombCount)
+	err := bombLocator.SetBombs(&game, bombCount)
+
+	if err != nil {
+		return Game{}, err
+	}
 
 	game.board.setCellNumbers()
 
-	return game
+	return game, nil
 }
 
 
@@ -40,6 +44,18 @@ func (this *Game) GetId() string {
 
 func (this *Game) SetId(id string)  {
 	this.data.Id = id
+}
+
+func (this *Game) GetRowCount() int {
+	return this.data.Board.RowCount
+}
+
+func (this *Game) GetStatus() shared.GameStatusType {
+	return this.data.Status
+}
+
+func (this *Game) GetColCount() int  {
+	return this.data.Board.ColCount
 }
 
 
@@ -52,20 +68,16 @@ func (this *Game) GetData() shared.GameData {
 	return copy
 }
 
-func (this *Game) GetRowCount() int {
-	return this.board.GetMaxRow()
-}
-
-func (this *Game) GetColCount() int {
-	return this.board.GetMaxCol()
-}
-
 
 func (this *Game) IsFinished() bool  {
 	return this.data.Status == shared.GameStatus_Lost || this.data.Status == shared.GameStatus_Won
 }
 
 func (this *Game) SetBomb(row int, col int) (bool, error) {
+	if err :=this.areInRange(row, col); err != nil {
+		return false, err
+	}
+
 	if this.data.Status == shared.GameStatus_Created {
 		return this.board.SetBomb(row, col), nil
 	}
@@ -74,9 +86,7 @@ func (this *Game) SetBomb(row int, col int) (bool, error) {
 }
 
 func (this *Game) RevealCell(row int, col int) error {
-	err := this.areInRange(row, col)
-
-	if err != nil {
+	if err := this.areInRange(row, col); err != nil {
 		return err
 	}
 
@@ -94,7 +104,7 @@ func (this *Game) RevealCell(row int, col int) error {
 
 	cell := this.board.getCell(row, col)
 
-	isBomb := cell.Expose(&this.board)
+	isBomb := cell.Reveal(&this.board)
 
 	if isBomb	{
 		//game end
@@ -114,12 +124,11 @@ func (this *Game) RevealCell(row int, col int) error {
 	return nil
 }
 
-func (this *Game) MarkCell(row int, col int) error {
-	err := this.areInRange(row, col)
-
-	if err != nil {
+func (this *Game) MarkCell(row int, col int, mark shared.CellMarkType) error {
+	if err := this.areInRange(row, col); err != nil {
 		return err
 	}
+
 
 	//if is the first cell exposed => start clock
 	count := this.board.GetRevealedCount()
@@ -135,7 +144,7 @@ func (this *Game) MarkCell(row int, col int) error {
 
 	cell := this.board.getCell(row, col)
 
-	cell.Mark()
+	cell.Mark(&this.board, mark)
 
 	return nil
 }
@@ -151,5 +160,4 @@ func (this *Game) areInRange(row int, col int) error {
 
 	return nil
 }
-
 

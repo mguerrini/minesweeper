@@ -26,14 +26,14 @@ func (this *minesweeperGameFactory) CreateGame(rowCount, colCount int, bombCount
 		return nil, errors.New("The count of bombs must be greater than 0")
 	}
 
-	if rowCount * bombCount > bombCount {
+	if rowCount * bombCount <= bombCount {
 		return nil, errors.New("The count of bombs can not be greater than the count of cells")
 	}
 
 	//create new game
-	game := NewGame(rowCount, colCount, bombCount, this.bombLocator)
+	game, err := NewGame(rowCount, colCount, bombCount, this.bombLocator)
 
-	return &game, nil
+	return &game, err
 }
 
 

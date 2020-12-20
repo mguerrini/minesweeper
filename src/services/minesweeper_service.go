@@ -69,7 +69,7 @@ func (this *minesweeperService) RevealCell(userId string, gameId string, row, co
 }
 
 
-func (this *minesweeperService) MarkCell(userId string, gameId string, row, col int) (*shared.GameData, error){
+func (this *minesweeperService) MarkCell(userId string, gameId string, row, col int, mark shared.CellMarkType) (*shared.GameData, error){
 
 	//save it
 	savedGame := this.gameDal.GetGameById(userId, gameId)
@@ -78,7 +78,7 @@ func (this *minesweeperService) MarkCell(userId string, gameId string, row, col 
 		return nil, errors.New("The gameid is invalid")
 	}
 
-	err := savedGame.MarkCell(row, col)
+	err := savedGame.MarkCell(row, col, mark)
 
 	if err != nil {
 		return nil, err

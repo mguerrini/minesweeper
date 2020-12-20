@@ -7,11 +7,12 @@ import (
 type Cell interface {
 	GetData() shared.CellData
 	GetType() shared.CellType
-	IsExposed() bool
+	IsRevealed() bool
 	IsMarked() bool
 
-	Mark()
-	Expose(board *Board) bool
+	setMark(markType shared.CellMarkType)
+	Mark(board *Board, mark shared.CellMarkType)
+	Reveal(board *Board) bool
 }
 
 
@@ -27,12 +28,12 @@ type cell struct {
 func NewEmptyCell(row, col int) Cell{
 	return &cell{
 		data:  shared.CellData{
-			Type:      shared.CellType_Empty,
-			Row:       row,
-			Col:       col,
-			IsReveled: false,
-			IsMarked:  false,
-			Number:    -1,
+			Type:       shared.CellType_Empty,
+			Row:        row,
+			Col:        col,
+			IsRevealed: false,
+			Mark:       shared.CellMarkType_None,
+			Number:     -1,
 		},
 	}
 }
@@ -45,20 +46,20 @@ func (this *cell) GetType () shared.CellType {
 	return this.data.Type
 }
 
-func (this *cell) IsExposed () bool {
-	return this.data.IsReveled
+func (this *cell) IsRevealed () bool {
+	return this.data.IsRevealed
 }
 
 func (this *cell) IsMarked () bool {
-	return this.data.IsMarked
+	return false
 }
 
-func (this *cell) Expose(board *Board) bool  {
-	if this.IsExposed() || this.IsMarked(){
+func (this *cell) Reveal(board *Board) bool  {
+	if this.IsRevealed() || this.IsMarked(){
 		return false
 	}
 
-	this.data.IsReveled = true;
+	this.data.IsRevealed = true;
 
 	//empty - expose the neighbors
 	for row:= this.data.Row-1; row<= this.data.Row+1; row++ {
@@ -68,7 +69,7 @@ func (this *cell) Expose(board *Board) bool  {
 				nCell := board.getCell(row, col)
 
 				if nCell.GetType() != shared.CellType_Bomb {
-					nCell.Expose(board)
+					nCell.Reveal(board)
 				}
 			}
 		}
@@ -77,13 +78,82 @@ func (this *cell) Expose(board *Board) bool  {
 	return false
 }
 
-func (this *cell) Mark()  {
-	if this.IsExposed() {
+func (this *cell) Mark(board *Board, mark shared.CellMarkType)  {
+	if this.IsRevealed() {
 		return
 	}
 
-	this.data.IsMarked = !this.data.IsMarked
+	if mark == shared.CellMarkType_None {
+		return
+	}
+
+	//change cell
+	mCell := NewMarkedCell(this)
+	board.setCell(this.data.Row, this.data.Col, mCell)
+
+	mCell.Mark(board, mark)
 }
+
+func (this *cell) setMark(mark shared.CellMarkType)   {
+	this.data.Mark = mark
+}
+
+
+/***********************************/
+/*         Marked Cell               */
+/***********************************/
+
+type markedCell struct {
+	cell
+	markedCell Cell
+}
+
+func NewMarkedCell(innerCell Cell) Cell {
+	return &markedCell{
+		markedCell: innerCell,
+	}
+}
+
+
+func (this *markedCell) GetData () shared.CellData {
+	return this.markedCell.GetData()
+}
+
+func (this *markedCell) GetType () shared.CellType {
+	return this.markedCell.GetType()
+}
+
+func (this *markedCell) IsRevealed () bool {
+	return false
+}
+
+func (this *markedCell) IsMarked () bool {
+	return true
+}
+
+func (this *markedCell) Reveal(board *Board) bool  {
+	if this.data.Mark == shared.CellMarkType_Flag {
+		return false
+	}
+
+	output := this.markedCell.Reveal(board)
+
+	//change de cell in the board
+	innerData := this.markedCell.GetData()
+	board.setCell(innerData.Row, innerData.Col, this.markedCell)
+
+	return output
+}
+
+func (this *markedCell) Mark(board *Board, mark shared.CellMarkType)  {
+	if mark == shared.CellMarkType_None {
+		innerData := this.markedCell.GetData()
+		board.setCell(innerData.Row, innerData.Col, this.markedCell)
+	} else {
+		this.markedCell.setMark(mark)
+	}
+}
+
 
 /***********************************/
 /*         Bomb Cell               */
@@ -97,23 +167,23 @@ func NewBombCell(row, col int) Cell {
 	return &bombCell{
 		cell: cell{
 			data: shared.CellData{
-				Type:      shared.CellType_Bomb,
-				Row:       row,
-				Col:       col,
-				IsReveled: false,
-				IsMarked:  false,
-				Number:    -1,
+				Type:       shared.CellType_Bomb,
+				Row:        row,
+				Col:        col,
+				IsRevealed: false,
+				Mark:       shared.CellMarkType_None,
+				Number:     -1,
 			},
 		},
 	}
 }
 
-func (this *bombCell) Expose(board *Board) bool {
-	if this.IsExposed() || this.IsMarked(){
+func (this *bombCell) Reveal(board *Board) bool {
+	if this.IsRevealed() || this.IsMarked(){
 		return false
 	}
 
-	this.data.IsReveled = true;
+	this.data.IsRevealed = true;
 
 	return true
 }
@@ -130,23 +200,23 @@ func NewNumberCell(row, col int, number int) Cell{
 	return &numberCell{
 		cell: cell{
 			data: shared.CellData{
-				Type:      shared.CellType_Number,
-				Row:       row,
-				Col:       col,
-				IsReveled: false,
-				IsMarked:  false,
-				Number:    number,
+				Type:       shared.CellType_Number,
+				Row:        row,
+				Col:        col,
+				IsRevealed: false,
+				Mark:       shared.CellMarkType_None,
+				Number:     number,
 			},
 		},
 	}
 }
 
 func (this *numberCell) Expose(board *Board) bool {
-	if this.IsExposed() || this.IsMarked(){
+	if this.IsRevealed() || this.IsMarked(){
 		return false
 	}
 
-	this.data.IsReveled = true;
+	this.data.IsRevealed = true;
 
 	return false
 }

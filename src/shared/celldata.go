@@ -1,17 +1,17 @@
 package shared
 
 type CellData struct {
-	Type      CellType `json:"type"`
-	Row       int      `json:"row"`
-	Col       int      `json:"col"`
-	IsReveled bool     `json:"is_exposed"`
-	IsMarked  bool     `json:"is_marked"`
-	Number    int      `json:"number"`
+	Type       CellType     `json:"type"`
+	Row        int          `json:"row"`
+	Col        int          `json:"col"`
+	IsRevealed bool         `json:"is_revealed"`
+	Mark       CellMarkType `json:"mark"`
+	Number     int          `json:"number"`
 }
 
 
 func (this *CellData) Hide() {
-	if this.IsReveled {
+	if this.IsRevealed {
 		return
 	}
 
@@ -20,6 +20,6 @@ func (this *CellData) Hide() {
 }
 
 func (this *CellData) Reveal() {
-	this.IsReveled = true;
-	this.IsMarked = false
+	this.IsRevealed = true;
+	this.Mark = CellMarkType_None
 }

@@ -38,7 +38,7 @@ func (this *Board) getData() shared.BoardData {
 
 	//I go through the cells to refresh copy
 	for row := 0; row<this.data.RowCount; row++{
-		for col := 0; row<this.data.ColCount; col++{
+		for col := 0; col<this.data.ColCount; col++{
 			cell := this.getCell(row, col)
 			copy.SetCell(row, col, cell.GetData())
 		}
@@ -74,7 +74,7 @@ func (this *Board) GetRevealedCount() int{
 	for row := 0; row<this.data.RowCount; row++{
 		for col := 0; row<this.data.ColCount; col++{
 			cell := this.getCell(row, col)
-			if cell.IsExposed() {
+			if cell.IsRevealed() {
 				output++
 			}
 		}
@@ -89,7 +89,7 @@ func (this *Board) GetNotRevealedCount() int{
 	for row := 0; row<this.data.RowCount; row++{
 		for col := 0; row<this.data.ColCount; col++{
 			cell := this.getCell(row, col)
-			if !cell.IsExposed() {
+			if !cell.IsRevealed() {
 				output++
 			}
 		}
@@ -139,8 +139,10 @@ func (this *Board) setCellNumbers()  {
 }
 
 func (this *Board) getCountNeighboringBombs(cell Cell) int {
-	fromRow := cell.GetData().Row - 1
-	toRow := cell.GetData().Row + 1
+	celldata := cell.GetData()
+
+	fromRow := celldata.Row - 1
+	toRow := celldata.Row + 1
 
 	if fromRow < 0 {
 		fromRow = 0
@@ -150,8 +152,8 @@ func (this *Board) getCountNeighboringBombs(cell Cell) int {
 		toRow = this.data.RowCount - 1
 	}
 
-	fromCol := cell.GetData().Col - 1
-	toCol := cell.GetData().Col + 1
+	fromCol := celldata.Col - 1
+	toCol := celldata.Col + 1
 
 	if fromCol < 0 {
 		fromCol = 0
@@ -163,7 +165,7 @@ func (this *Board) getCountNeighboringBombs(cell Cell) int {
 
 	count:=0
 	for row := fromRow; row <= toRow; row++ {
-		for col := fromCol; row <= toCol; col++ {
+		for col := fromCol; col <= toCol; col++ {
 			currCell := this.getCell(row, col)
 			if currCell.GetType() == shared.CellType_Bomb {
 				count++
