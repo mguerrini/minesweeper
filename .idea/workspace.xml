@@ -2,16 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45fb1885-db0a-4a13-b72b-ad6691b28151" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/configs/local_configuration.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/production_configuration.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/common/configs/config.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/common/configs/config_factory.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/common/configs/config_singleton.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/common/factory/factory_registry.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/common/factory/factory_registry_singleton.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/common/factory/generic_factory.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/common/factory/generic_factory_singleton.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/common/helpers/typehelper.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/controllers/minesweeper_controller.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/dal/gamedal/dal.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/dal/gamedal/db_dal.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/dal/gamedal/memory_dal.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/domain/board.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/domain/bomb_locator.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/domain/cells.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/domain/game.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/domain/game_factory.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/services/minesweeper_factory.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/services/minesweeper_service.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/services/minesweeper_singleton.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/shared/boarddata.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/shared/celldata.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/shared/enums.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/shared/gamedata.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +39,9 @@
     <option name="indexEntireGoPath" value="false" />
   </component>
   <component name="ProjectId" id="1lu1UAuQu9c5yf1yMBJvwgXqhtc" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
