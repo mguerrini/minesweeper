@@ -33,20 +33,6 @@ func NewBoard(rowCount, colCount int) Board {
 	return board
 }
 
-func (this *Board) getData() shared.BoardData {
-	copy := this.data
-
-	//I go through the cells to refresh copy
-	for row := 0; row<this.data.RowCount; row++{
-		for col := 0; col<this.data.ColCount; col++{
-			cell := this.getCell(row, col)
-			copy.SetCell(row, col, cell.GetData())
-		}
-	}
-
-	return copy
-}
-
 func (this *Board) initializeCells() {
 	for row := range this.cells {
 		for col, _ := range this.cells[row] {
@@ -54,71 +40,6 @@ func (this *Board) initializeCells() {
 			this.setCell(row, col, nCell)
 		}
 	}
-}
-
-func (this *Board) GetMaxRow() int{
-	return this.data.RowCount
-}
-
-func (this *Board) GetMaxCol() int{
-	return this.data.ColCount
-}
-
-func (this *Board) GetBombsCount() int{
-	return this.data.BombsCount
-}
-
-func (this *Board) GetRevealedCount() int{
-	output := 0
-
-	for row := 0; row<this.data.RowCount; row++{
-		for col := 0; row<this.data.ColCount; col++{
-			cell := this.getCell(row, col)
-			if cell.IsRevealed() {
-				output++
-			}
-		}
-	}
-
-	return output
-}
-
-func (this *Board) GetNotRevealedCount() int{
-	output := 0
-
-	for row := 0; row<this.data.RowCount; row++{
-		for col := 0; row<this.data.ColCount; col++{
-			cell := this.getCell(row, col)
-			if !cell.IsRevealed() {
-				output++
-			}
-		}
-	}
-
-	return output
-}
-
-
-
-func (this *Board) SetBomb(row int, col int) bool {
-	cell := this.getCell(row, col)
-
-	if cell.GetType() != shared.CellType_Bomb {
-		//convert this cell to bomb cell
-		this.setCell(row, col, NewBombCell(row, col))
-		this.data.BombsCount++
-		return true
-	}
-
-	return false
-}
-
-func (this *Board) getCell(row int, col int) Cell {
-	return this.cells[row][col]
-}
-
-func (this *Board) setCell(row int, col int, cell Cell)  {
-	this.cells[row][col] = cell
 }
 
 func (this *Board) setCellNumbers()  {
@@ -175,5 +96,105 @@ func (this *Board) getCountNeighboringBombs(cell Cell) int {
 
 	return count
 }
+
+
+
+func (this *Board) getData() shared.BoardData {
+	copy := this.data
+
+	//I go through the cells to refresh copy
+	for row := 0; row<this.data.RowCount; row++{
+		for col := 0; col<this.data.ColCount; col++{
+			cell := this.getCell(row, col)
+			copy.SetCell(row, col, cell.GetData())
+		}
+	}
+
+	return copy
+}
+
+func (this *Board) getCell(row int, col int) Cell {
+	return this.cells[row][col]
+}
+
+func (this *Board) setCell(row int, col int, cell Cell)  {
+	this.cells[row][col] = cell
+}
+
+
+
+func (this *Board) GetMaxRow() int{
+	return this.data.RowCount
+}
+
+func (this *Board) GetMaxCol() int{
+	return this.data.ColCount
+}
+
+func (this *Board) GetBombsCount() int{
+	return this.data.BombsCount
+}
+
+func (this *Board) GetRevealedCount() int{
+	output := 0
+
+	for row := 0; row<this.data.RowCount; row++{
+		for col := 0; col<this.data.ColCount; col++{
+			cell := this.getCell(row, col)
+			if cell.IsRevealed() {
+				output++
+			}
+		}
+	}
+
+	return output
+}
+
+func (this *Board) GetNotRevealedCount() int{
+	output := 0
+
+	for row := 0; row<this.data.RowCount; row++{
+		for col := 0; col<this.data.ColCount; col++{
+			cell := this.getCell(row, col)
+			if !cell.IsRevealed() {
+				output++
+			}
+		}
+	}
+
+	return output
+}
+
+
+func (this *Board) SetBomb(row int, col int) bool {
+	cell := this.getCell(row, col)
+
+	if cell.GetType() != shared.CellType_Bomb {
+		//convert this cell to bomb cell
+		this.setCell(row, col, NewBombCell(row, col))
+		this.data.BombsCount++
+		return true
+	}
+
+	return false
+}
+
+func (this *Board) revealBombs() {
+	for row := 0; row<this.data.RowCount; row++{
+		for col := 0; col<this.data.ColCount; col++{
+			cell := this.getCell(row, col)
+			if (cell.GetType() == shared.CellType_Number) {
+				emptyCell := NewEmptyCell(row, col)
+				emptyCell.setRevealed(true)
+				this.setCell(row, col, emptyCell)
+			} else {
+				cell.setRevealed(true)
+			}
+		}
+	}
+}
+
+
+
 
 

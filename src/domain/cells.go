@@ -11,6 +11,7 @@ type Cell interface {
 	IsMarked() bool
 
 	setMark(markType shared.CellMarkType)
+	setRevealed(isRevealed bool)
 	Mark(board *Board, mark shared.CellMarkType)
 	Reveal(board *Board) bool
 }
@@ -55,7 +56,7 @@ func (this *cell) IsMarked () bool {
 }
 
 func (this *cell) Reveal(board *Board) bool  {
-	if this.IsRevealed() || this.IsMarked(){
+	if this.IsRevealed() {
 		return false
 	}
 
@@ -96,6 +97,10 @@ func (this *cell) Mark(board *Board, mark shared.CellMarkType)  {
 
 func (this *cell) setMark(mark shared.CellMarkType)   {
 	this.data.Mark = mark
+}
+
+func (this *cell) setRevealed(isRevealed bool)   {
+	this.data.IsRevealed = isRevealed
 }
 
 
@@ -179,7 +184,7 @@ func NewBombCell(row, col int) Cell {
 }
 
 func (this *bombCell) Reveal(board *Board) bool {
-	if this.IsRevealed() || this.IsMarked(){
+	if this.IsRevealed() {
 		return false
 	}
 
@@ -211,8 +216,8 @@ func NewNumberCell(row, col int, number int) Cell{
 	}
 }
 
-func (this *numberCell) Expose(board *Board) bool {
-	if this.IsRevealed() || this.IsMarked(){
+func (this *numberCell) Reveal(board *Board) bool {
+	if this.IsRevealed() {
 		return false
 	}
 

@@ -108,21 +108,33 @@ func (this *Game) RevealCell(row int, col int) error {
 
 	if isBomb	{
 		//game end
-		this.data.FinishTime = time.Now()
-		this.data.Status = shared.GameStatus_Lost
+		this.gameOver(false)
 	}
 
 	//check if won
 	notExposedCount := this.board.GetNotRevealedCount()
 
 	if notExposedCount == this.board.GetBombsCount() {
-		//won the game
-		this.data.FinishTime = time.Now()
-		this.data.Status = shared.GameStatus_Won
+		this.gameOver(true)
 	}
 
 	return nil
 }
+
+func (this *Game) gameOver (won bool) {
+	//revelead all cell and leave only de bombs
+	this.data.FinishTime = time.Now()
+
+	if won {
+		//won the game
+		this.data.Status = shared.GameStatus_Won
+	} else {
+		this.data.Status = shared.GameStatus_Lost
+	}
+
+	this.board.revealBombs()
+}
+
 
 func (this *Game) MarkCell(row int, col int, mark shared.CellMarkType) error {
 	if err := this.areInRange(row, col); err != nil {
