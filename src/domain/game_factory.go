@@ -7,3 +7,15 @@ type MinesweeperGameFactory interface {
 type minesweeperGameFactory struct {
 	bombLocator BombLocator
 }
+
+func NewMinesweeperGameFactory(locator BombLocator) MinesweeperGameFactory {
+	return &minesweeperGameFactory{bombLocator: locator}
+}
+
+func (this *minesweeperGameFactory) CreateGame(rowCount, colCount int, bombCount int) (*Game, error){
+
+
+	return nil, nil
+}
+
+

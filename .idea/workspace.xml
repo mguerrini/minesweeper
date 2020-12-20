@@ -2,23 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45fb1885-db0a-4a13-b72b-ad6691b28151" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/services/minesweeper_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/production_configuration.yml" beforeDir="false" afterPath="$PROJECT_DIR$/configs/production_configuration.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs/local_configuration.yml" beforeDir="false" afterPath="$PROJECT_DIR$/configs/local_configuration.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controllers/minesweeper_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/minesweeper_controller.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dal/gamedal/dal.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/dal/gamedal/dal.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/dal/gamedal/db_dal.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/dal/gamedal/db_dal.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/dal/gamedal/memory_dal.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/dal/gamedal/memory_dal.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/domain/board.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/domain/board.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/domain/bomb_locator.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/domain/bomb_locator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/domain/cells.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/domain/cells.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/domain/game.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/domain/game.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/domain/game_factory.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/domain/game_factory.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/minesweeper_factory.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/minesweeper_factory.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/services/minesweeper_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/minesweeper_service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/shared/boarddata.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/boarddata.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/shared/celldata.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/celldata.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/shared/enums.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/enums.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/shared/gamedata.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/shared/gamedata.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/minesweeper_singleton.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/minesweeper_singleton.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +58,71 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/common/configs" />
     </key>
+  </component>
+  <component name="RunManager" selected="Go Test.minesweeper_test.go">
+    <configuration name="Test_CreateMinesweeperSingleton_Default1 in github.com/minesweeper/src/services" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="minesweeper" />
+      <working_directory value="$PROJECT_DIR$/src/services" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/minesweeper/src/services" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^\QTest_CreateMinesweeperSingleton_Default1\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Test_CreateMinesweeperSingleton_Default2 in github.com/minesweeper/src/services" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="minesweeper" />
+      <working_directory value="$PROJECT_DIR$/src/services" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/minesweeper/src/services" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^\QTest_CreateMinesweeperSingleton_Default2\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Test_CreateMinesweeperSingleton_FromConfiguration1 in github.com/minesweeper/src/services" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="minesweeper" />
+      <working_directory value="$PROJECT_DIR$/src/services" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/minesweeper/src/services" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^\QTest_CreateMinesweeperSingleton_FromConfiguration1\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Test_CreateMinesweeperSingleton_FromConfiguration2 in github.com/minesweeper/src/services" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="minesweeper" />
+      <working_directory value="$PROJECT_DIR$/src/services" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/minesweeper/src/services" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^\QTest_CreateMinesweeperSingleton_FromConfiguration2\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="minesweeper_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="minesweeper" />
+      <working_directory value="$PROJECT_DIR$/src/services" />
+      <framework value="gotest" />
+      <kind value="FILE" />
+      <package value="github.com/minesweeper" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/src/services/minesweeper_test.go" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Test.minesweeper_test.go" />
+        <item itemvalue="Go Test.Test_CreateMinesweeperSingleton_Default2 in github.com/minesweeper/src/services" />
+        <item itemvalue="Go Test.Test_CreateMinesweeperSingleton_Default1 in github.com/minesweeper/src/services" />
+        <item itemvalue="Go Test.Test_CreateMinesweeperSingleton_FromConfiguration2 in github.com/minesweeper/src/services" />
+        <item itemvalue="Go Test.Test_CreateMinesweeperSingleton_FromConfiguration1 in github.com/minesweeper/src/services" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
