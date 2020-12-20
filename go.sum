@@ -1,0 +1,6 @@
+github.com/beevik/guid v0.0.0-20170504223318-d0ea8faecee0 h1:oLd/YLOTOgA4D4aAUhIE8vhl/LAP1ZJrj0mDQpl7GB8=
+github.com/beevik/guid v0.0.0-20170504223318-d0ea8faecee0/go.mod h1:XzXWuOd1wJ63MtICHh5+PnvCuxsB/d58T8TswEhI/9I=
+github.com/olebedev/config v0.0.0-20190528211619-364964f3a8e4/go.mod h1:RL5+WRxWTAXqqCi9i+eZlHrUtO7AQujUqWi+xMohmc4=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/yaml.v2 v2.2.2 h1:ZCJp+EgiOT7lHqUV2J862kp8Qj64Jo6az82+3Td9dZw=
+gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=

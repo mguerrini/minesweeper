@@ -1,0 +1,12 @@
+root:
+  services:
+    minesweeper:
+      default:
+  dals:
+    gamedal:
+      default:
+      inmemory:
+
+  bomblocator:
+    random:
+    fixed:
