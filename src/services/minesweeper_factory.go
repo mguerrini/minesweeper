@@ -18,14 +18,7 @@ func CreateMinesweeperService (configurationName string) (interface{}, error) {
 	var minesLocator domain.MinesLocator
 	var gameDal gamedal.GameDal
 
-	//if configuration is not defined, search for default configuration.
-	//If default configuration not exist => create default service implementation
-
-	if len(configurationName) == 0 {
-		configurationName = "root.services.minesweeper.default.configuration"
-	}
-
-	if !configs.Singleton().Exist(configurationName) {
+	if len(configurationName) == 0 || !configs.Singleton().Exist(configurationName) {
 		return createDefaultMinesweeperService()
 	} else {
 		//search configuration

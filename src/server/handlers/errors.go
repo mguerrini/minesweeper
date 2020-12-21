@@ -18,23 +18,28 @@ func HandleError(c *gin.Context) {
 		var ginError *gin.Error
 		var genericError apierrors.GenericError
 		var ok bool
+
+		//append all errors messages
 		for _, ginError = range c.Errors {
-			errorsMsgs = append(errorsMsgs, ginError.Err.Error())
 			genericError, ok = ginError.Err.(apierrors.GenericError)
-			if !ok {
-				genericError = apierrors.NewApiError(ginError.Err, strings.Join(errorsMsgs, ","), http.StatusInternalServerError)
+			errorsMsgs = append(errorsMsgs, ginError.Err.Error())
+		}
+
+		//find the generic error
+		for _, ginError = range c.Errors {
+			genericError, ok = ginError.Err.(apierrors.GenericError)
+			if ok {
+				break
 			}
 		}
 
-		if genericError != nil {
-			logger.Error(genericError.AsString())
-
-			c.JSON(genericError.GetStatus(), genericError)
-
-			logRequestWithError(c, genericError)
-		} else {
-			panic("no error found when expected")
+		if genericError == nil {
+			genericError = apierrors.NewApiError(ginError.Err, strings.Join(errorsMsgs, ","), http.StatusInternalServerError)
 		}
+
+		c.JSON(genericError.GetStatus(), genericError)
+
+		logRequestWithError(c, genericError, errorsMsgs)
 
 		if !c.IsAborted() {
 			c.AbortWithStatus(genericError.GetStatus())
@@ -42,7 +47,10 @@ func HandleError(c *gin.Context) {
 	}
 }
 
-func logRequestWithError(c *gin.Context, err error) {
+func logRequestWithError(c *gin.Context, mainErr apierrors.GenericError, msgList []string) {
+
+	allMsgs := strings.Join(msgList, ",")
+
 	input, _ := c.Get("request")
 
 	if input != nil {
@@ -51,7 +59,9 @@ func logRequestWithError(c *gin.Context, err error) {
 		if errSer == nil {
 			buf := bytes.NewBuffer(bs)
 			body := buf.String()
-			logger.Error(fmt.Sprintf("Request Body: %s\nError: %s", body, err.Error()))
+			logger.Error(fmt.Sprintf("Request Body: %s", body))
 		}
 	}
+
+	logger.Error(fmt.Sprintf("%s - More errors: %s", mainErr.AsString(), allMsgs))
 }

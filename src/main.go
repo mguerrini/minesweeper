@@ -1,10 +1,17 @@
 package main
 
 import (
-	"github.com/minesweeper/src/common/configs"
+	"github.com/minesweeper/src/common/logger"
+	"github.com/minesweeper/src/server"
 )
 
 func main(){
-	//TODO Check if local or production environment
-	configs.Initialize("local_configuration.yml")
+	//prepare server
+	server.StartUp()
+
+	//start server
+	engine := server.New()
+	logger.Info("Listening and serving HTTP on port 8080")
+
+	engine.Run(":8080")
 }

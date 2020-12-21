@@ -2,22 +2,15 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/minesweeper/src/controllers"
 	"github.com/minesweeper/src/server/handlers"
 	"net/http"
 )
 
-var (
-	Router *gin.Engine
-	Controller *controllers.MinesweeperController
-)
 
 // New creates a new router
 func New() *gin.Engine {
 
 	configureRouter()
-
-	Controller = CreateController()
 
 	return mapUrls(Router)
 }
@@ -30,13 +23,16 @@ func configureRouter() {
 	// Panic recovery
 	Router.Use(handlers.RecoveryWithWriter())
 	Router.Use(handlers.HandleError)
-	Router.Use(AdaptHandler(handlers.HandleResponse))
+	Router.Use(AdaptHandler(handlers.HandleRequestAndResponse))
 }
 
 func mapUrls(router *gin.Engine) *gin.Engine {
 
 	router.GET("/ping",
 		AdaptHandler(Pong))
+
+	router.GET("minesweeper/users/:user_id/games/:game_id/show",
+		AdaptHandler(Controller.ShowGame))
 
 	router.GET("minesweeper/users/:user_id/games",
 		AdaptHandler(Controller.GetGameListByUserId))
@@ -47,10 +43,10 @@ func mapUrls(router *gin.Engine) *gin.Engine {
 	router.POST("minesweeper/users/:user_id/games",
 		AdaptHandler(Controller.CreateNewGame))
 
-	router.POST("minesweeper/users/:user_id/games/:game_id/reveal",
+	router.PUT("minesweeper/users/:user_id/games/:game_id/reveal",
 		AdaptHandler(Controller.RevealCell))
 
-	router.POST("minesweeper/users/:user_id/games/:game_id/mark",
+	router.PUT("minesweeper/users/:user_id/games/:game_id/mark",
 		AdaptHandler(Controller.MarkCell))
 
 	router.DELETE("minesweeper/users/:user_id/games/:game_id",

@@ -1,22 +1,30 @@
 root:
+  startup:
+    minesweeper: "root.services.minesweeper.default"
+
   services:
     minesweeper:
       default:
-        factory: "default_MinesweeperService" #si no esta definido usa el principal
+        factory: "default_MinesweeperService"
         configuration:
           mineslocator: "root.mineslocator.random"
           gamedal: "root.dals.gamedal.inmemory"
 
   dals:
     gamedal:
-      db:
-        factory: "db_GameDal"
-        configuration:
-          connectionstring: "cnn"
-
       inmemory:
         factory: "inmemory_GameDal"
 
   mineslocator:
     random:
       factory: "random_MinesLocator"
+
+
+
+
+
+
+
+
+
+

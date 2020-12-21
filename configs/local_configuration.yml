@@ -1,16 +1,19 @@
 root:
+  startup:
+    minesweeper: "root.services.minesweeper.local"
+
   services:
     minesweeper:
       default:
-        factory: "default_MinesweeperService" #si no esta definido usa el principal
+        factory: "default_MinesweeperService"
         configuration:
           mineslocator: "root.mineslocator.random"
           gamedal: "root.dals.gamedal.default"
 
       local:
-        factory: "default_MinesweeperService" #si no esta definido usa el principal
+        factory: "default_MinesweeperService"
         configuration:
-          mineslocator: "root.mineslocator.fixed"
+          mineslocator: "root.mineslocator.fixed2"
           gamedal: "root.dals.gamedal.inmemory"
   dals:
     gamedal:
@@ -28,10 +31,19 @@ root:
     fixed:
       factory: "fixed_MinesLocator"
       configuration:
-        - "1,1"
-        - "1,2"
-        - "1,3"
-
+        mines:
+          - "0,0"
+          - "0,4"
+          - "4,0"
+          - "4,4"
+          - "2,2"
+    fixed2:
+      factory: "fixed_MinesLocator"
+      configuration:
+        mines:
+          - "2,1"
+          - "2,2"
+          - "2,3"
 
 
 

@@ -6,11 +6,21 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/minesweeper/src/common/logger"
+	"io/ioutil"
 	"net/http"
 )
 
 
-func HandleResponse(c *gin.Context) error {
+func HandleRequestAndResponse(c *gin.Context) error {
+	buf := make([]byte, 1024)
+	num, _:= c.Request.Body.Read(buf)
+	c.Request.Body.Close()
+
+	req := string(buf[0:num])
+	c.Set("request", req)
+
+	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(buf[0:num]))
+
 	c.Next()
 	if len(c.Errors) > 0 {
 		return nil
@@ -38,10 +48,6 @@ func logRequestAndResponse(c *gin.Context) {
 	//REQUEST
 	input, _ := c.Get("request")
 
-	if input == nil {
-		return
-	}
-
 	bsReq, errReq := json.Marshal(input);
 
 	if errReq == nil {
@@ -62,5 +68,5 @@ func logRequestAndResponse(c *gin.Context) {
 	}
 
 	//LOG
-	logger.Info(fmt.Sprintf("{\"request\": %s, \"response\": %s }", reqStr, resStr))
+	logger.Info(fmt.Sprintf("Payloads: {\"request\": %s, \"response\": %s }", reqStr, resStr))
 }

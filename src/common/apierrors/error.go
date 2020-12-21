@@ -15,10 +15,10 @@ type GenericError interface {
 }
 
 type ApiError struct {
-	code    int    `json:"code"`
-	status  string `json:"status"`
-	error   string `json:"error"`
-	message string `json:"message"`
+	Code    int    `json:"code"`
+	Status  string `json:"status"`
+	Err     string `json:"error"`
+	Message string `json:"message"`
 }
 
 
@@ -35,40 +35,42 @@ func NewApiError(err error, message string, status int) *ApiError {
 	errMsg := ""
 	if err != nil {
 		errMsg = err.Error()
+	} else {
+		errMsg = message
 	}
 	return &ApiError{
-		message: message,
-		error:   errMsg,
-		status:  http.StatusText(status),
-		code:    status,
+		Message: message,
+		Err:     errMsg,
+		Status:  http.StatusText(status),
+		Code:    status,
 	}
 }
 
 
 func (e *ApiError) GetMessage() string {
-	return e.message
+	return e.Message
 }
 
 func (e *ApiError) GetStatusCode() int {
-	return e.code
+	return e.Code
 }
 
 func (e *ApiError) GetError() string {
-	return e.error
+	return e.Err
 }
 
 func (e *ApiError) AsString() string {
-	if len(e.error) == 0 {
+	if len(e.Err) == 0 {
 		if len(e.GetMessage()) == 0 {
-			return fmt.Sprintf("{[code: %d - %s]}", e.code, e.status)
+			return fmt.Sprintf("[%d - %s]", e.Code, e.Status)
 		} else {
-			return fmt.Sprintf("{[code: %d - %s] message: %s}", e.code, e.status, e.GetMessage())
+			return fmt.Sprintf("[%d - %s] message: %s", e.Code, e.Status, e.Message)
 		}
 	} else {
 		if len(e.GetMessage()) == 0 {
-			return fmt.Sprintf("{[code: %d - %s] error: %s}", e.code, e.status, e.GetError())
+			return fmt.Sprintf("[%d - %s] error: %s", e.Code, e.Status, e.Err)
 		} else {
-			return fmt.Sprintf("{[code: %d - %s] message: %s, error: %s}", e.code, e.status, e.GetMessage(), e.GetError())
+			return fmt.Sprintf("[%d - %s] message: %s, error: %s", e.Code, e.Status, e.Message, e.Err)
 		}
 	}
 }
@@ -77,23 +79,23 @@ func (e *ApiError) AsString() string {
 /*      GenericError interface       */
 /*************************************/
 func (e *ApiError) GetStatus() int {
-	return e.code
+	return e.Code
 }
 
 func (e *ApiError) Error() string {
-	return e.error
+	return e.Err
 }
 
 func (e *ApiError) Cause() error {
-	if len(e.error) == 0 {
-		return errors.New(e.message)
+	if len(e.Err) == 0 {
+		return errors.New(e.Message)
 	} else {
-		return errors.New(e.error)
+		return errors.New(e.Err)
 	}
 }
 
 func (e *ApiError) ErrorClass() string {
-	return e.status
+	return e.Status
 }
 
 /*************************************/

@@ -8,6 +8,8 @@ import (
 )
 
 type MinesweeperService interface {
+	ShowGame(userId string, gameId string) (*shared.GameData, error)
+
 	GetGame(userId string, gameId string) (*shared.GameData, error)
 	GetGameListByUserId(userId string) ([]*shared.GameData, error)
 
@@ -23,6 +25,31 @@ type MinesweeperService interface {
 type minesweeperService struct {
 	gameDal     gamedal.GameDal
 	gameFactory domain.MinesweeperGameFactory
+}
+
+
+func (this *minesweeperService) ShowGame(userId string, gameId string) (*shared.GameData, error){
+	if userId == "" {
+		return nil, apierrors.NewBadRequest(nil, "The user id is mandatory")
+	}
+
+	if gameId == "" {
+		return nil, apierrors.NewBadRequest(nil, "The game id is mandatory")
+	}
+
+	//get game
+	savedGame, err := this.gameDal.GetGameById(userId, gameId)
+	if err != nil {
+		return nil, err
+	}
+
+	if savedGame == nil {
+		return nil, apierrors.NewBadRequest(nil, "The game id not exist")
+	}
+
+	data := savedGame.GetData()
+
+	return &data, nil
 }
 
 

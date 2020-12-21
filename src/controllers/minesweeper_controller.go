@@ -12,6 +12,35 @@ type MinesweeperController struct {
 
 }
 
+func NewMinesweeperController() *MinesweeperController {
+	return &MinesweeperController{}
+}
+
+//GET minesweeper/users/:user_id/games/:game_id/show
+//for debug
+func (this *MinesweeperController)ShowGame(c *gin.Context) error {
+	userId := c.Param("user_id")
+	if userId == "" {
+		return apierrors.NewBadRequest(nil, "User id is mandatory")
+	}
+
+	gameId := c.Param("game_id")
+	if gameId == "" {
+		return apierrors.NewBadRequest(nil, "Game id is mandatory")
+	}
+
+	game, err := services.Singleton().ShowGame(userId, gameId)
+
+	if err != nil {
+		return err
+	}
+
+	c.Set("status_code", http.StatusOK)
+	c.Set("response", game)
+
+	return nil
+}
+
 
 //GET minesweeper/users/:user_id/games/:game_id
 func (this *MinesweeperController)	GetGame(c *gin.Context) error {
@@ -36,7 +65,6 @@ func (this *MinesweeperController)	GetGame(c *gin.Context) error {
 
 	return nil
 }
-
 
 
 //GET minesweeper/users/:user_id/games

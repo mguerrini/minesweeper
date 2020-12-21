@@ -3,6 +3,7 @@ package gamedal
 import (
 	"github.com/beevik/guid"
 	"github.com/minesweeper/src/domain"
+	"strings"
 	"sync"
 )
 
@@ -68,6 +69,7 @@ func (this * GameInMemoryDal) InsertGame(userId string, game *domain.Game) (*dom
 	defer this.mutex.Unlock()
 
 	id := guid.New().String()
+	id = strings.Replace(id, "-", "", -1)
 	game.SetId(id)
 
 	reg := UserGame{
