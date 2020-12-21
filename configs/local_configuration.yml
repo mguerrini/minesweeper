@@ -4,13 +4,13 @@ root:
       default:
         factory: "default_MinesweeperService" #si no esta definido usa el principal
         configuration:
-          bomblocator: "root.bomblocator.random"
+          mineslocator: "root.mineslocator.random"
           gamedal: "root.dals.gamedal.default"
 
       local:
         factory: "default_MinesweeperService" #si no esta definido usa el principal
         configuration:
-          bomblocator: "root.bomblocator.fixed"
+          mineslocator: "root.mineslocator.fixed"
           gamedal: "root.dals.gamedal.inmemory"
   dals:
     gamedal:
@@ -22,11 +22,11 @@ root:
       inmemory:
         factory: "inmemory_GameDal"
 
-  bomblocator:
+  mineslocator:
     random:
-      factory: "random_BombLocator"
+      factory: "random_MinesLocator"
     fixed:
-      factory: "fixed_BombLocator"
+      factory: "fixed_MinesLocator"
       configuration:
         - "1,1"
         - "1,2"

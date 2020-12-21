@@ -3,7 +3,7 @@ package shared
 type BoardData struct {
 	RowCount   int          `json:"row_count"`
 	ColCount   int          `json:"col_count"`
-	BombsCount int          `json:"bomb_count"`
+	MinesCount int          `json:"mines_count"`
 	Cells      [][]CellData `json:"cells"`
 }
 

@@ -5,33 +5,33 @@ import (
 )
 
 type MinesweeperGameFactory interface {
-	CreateGame(rowCount, colCount int, bombCount int) (*Game, error)
+	CreateGame(rowCount, colCount int, minesCount int) (*Game, error)
 }
 
 type minesweeperGameFactory struct {
-	bombLocator BombLocator
+	minesLocator MinesLocator
 }
 
-func NewMinesweeperGameFactory(locator BombLocator) MinesweeperGameFactory {
-	return &minesweeperGameFactory{bombLocator: locator}
+func NewMinesweeperGameFactory(locator MinesLocator) MinesweeperGameFactory {
+	return &minesweeperGameFactory{minesLocator: locator}
 }
 
-func (this *minesweeperGameFactory) CreateGame(rowCount, colCount int, bombCount int) (*Game, error){
+func (this *minesweeperGameFactory) CreateGame(rowCount, colCount int, minesCount int) (*Game, error){
 
 	if rowCount == 0 || colCount == 0 {
 		return nil, apierrors.NewBadRequest(nil, "Row and Column size can not be 0 or less")
 	}
 
-	if bombCount == 0 {
-		return nil, apierrors.NewBadRequest(nil, "The count of bombs must be greater than 0")
+	if minesCount == 0 {
+		return nil, apierrors.NewBadRequest(nil, "The count of mines must be greater than 0")
 	}
 
-	if rowCount * bombCount <= bombCount {
-		return nil, apierrors.NewBadRequest(nil, "The count of bombs can not be greater than the count of cells")
+	if rowCount *minesCount <= minesCount {
+		return nil, apierrors.NewBadRequest(nil, "The count of mines can not be greater than the count of cells")
 	}
 
 	//create new game
-	game, err := NewGame(rowCount, colCount, bombCount, this.bombLocator)
+	game, err := NewGame(rowCount, colCount, minesCount, this.minesLocator)
 
 	return &game, err
 }

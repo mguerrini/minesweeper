@@ -8,7 +8,7 @@ import (
 )
 
 type MinesweeperService interface {
-	NewGame(userId string, row, col int, bombsCount int) (*shared.GameData, error)
+	NewGame(userId string, row, col int, minesCount int) (*shared.GameData, error)
 	RevealCell(userId string, gameId string, row, col int) (*shared.GameData, error)
 	MarkCell(userId string, gameId string, row, col int, mark shared.CellMarkType) (*shared.GameData, error)
 	GetGame(userId string, gameId string) (*shared.GameData, error)
@@ -22,8 +22,8 @@ type minesweeperService struct {
 
 
 
-func (this *minesweeperService) NewGame(userId string, row, col int, bombsCount int) (*shared.GameData, error){
-	game, err := this.gameFactory.CreateGame(row, col, bombsCount)
+func (this *minesweeperService) NewGame(userId string, row, col int, minesCount int) (*shared.GameData, error){
+	game, err := this.gameFactory.CreateGame(row, col, minesCount)
 
 	if err != nil {
 		return nil, err

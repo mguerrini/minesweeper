@@ -13,7 +13,7 @@ type Game struct {
 }
 
 
-func NewGame(rowCount, colCount int, bombCount int, bombLocator BombLocator) (Game, error) {
+func NewGame(rowCount, colCount int, minesCount int, minesLocator MinesLocator) (Game, error) {
 	board := NewBoard(rowCount, colCount)
 
 	game := Game{
@@ -26,7 +26,7 @@ func NewGame(rowCount, colCount int, bombCount int, bombLocator BombLocator) (Ga
 		board: board,
 	}
 
-	err := bombLocator.SetBombs(&game, bombCount)
+	err := minesLocator.SetMines(&game, minesCount)
 
 	if err != nil {
 		return Game{}, err
@@ -73,16 +73,16 @@ func (this *Game) IsFinished() bool  {
 	return this.data.Status == shared.GameStatus_Lost || this.data.Status == shared.GameStatus_Won
 }
 
-func (this *Game) SetBomb(row int, col int) (bool, error) {
+func (this *Game) SetMines(row int, col int) (bool, error) {
 	if err :=this.areInRange(row, col); err != nil {
 		return false, err
 	}
 
 	if this.data.Status == shared.GameStatus_Created {
-		return this.board.SetBomb(row, col), nil
+		return this.board.SetMines(row, col), nil
 	}
 
-	return false, apierrors.NewBadRequest(nil, "The game is started, can not add more bombs")
+	return false, apierrors.NewBadRequest(nil, "The game is started, can not add more mines")
 }
 
 func (this *Game) RevealCell(row int, col int) error {
@@ -97,9 +97,9 @@ func (this *Game) RevealCell(row int, col int) error {
 
 	cell := this.board.getCell(row, col)
 
-	isBomb := cell.Reveal(&this.board)
+	isMine := cell.Reveal(&this.board)
 
-	if isBomb	{
+	if isMine	{
 		//game end
 		this.gameOver(false)
 	}
@@ -107,7 +107,7 @@ func (this *Game) RevealCell(row int, col int) error {
 	//check if won
 	notExposedCount := this.board.GetNotRevealedCount()
 
-	if notExposedCount == this.board.GetBombsCount() {
+	if notExposedCount == this.board.GetMinesCount() {
 		this.gameOver(true)
 	}
 
@@ -148,7 +148,7 @@ func (this *Game) startGame () error  {
 }
 
 func (this *Game) gameOver (won bool) {
-	//revelead all cell and leave only de bombs
+	//revelead all cell and leave only de mines
 	this.data.FinishTime = time.Now()
 
 	if won {
@@ -158,7 +158,7 @@ func (this *Game) gameOver (won bool) {
 		this.data.Status = shared.GameStatus_Lost
 	}
 
-	this.board.revealBombs()
+	this.board.revealMines()
 }
 
 func (this *Game) areInRange(row int, col int) error {

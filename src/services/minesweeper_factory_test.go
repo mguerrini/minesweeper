@@ -13,9 +13,9 @@ func factoryServicesTestSetup() {
 	//service
 	factory.FactoryRegistrySingleton().RegisterFactory("default_MinesweeperService", CreateMinesweeperService)
 
-	//bomb locators
-	factory.FactoryRegistrySingleton().RegisterFactory("random_BombLocator", domain.CreateRandomBombLocator)
-	factory.FactoryRegistrySingleton().RegisterFactory("fixed_BombLocator", domain.CreateFixedBombLocator)
+	//mines locators
+	factory.FactoryRegistrySingleton().RegisterFactory("random_MinesLocator", domain.CreateRandomMinesLocator)
+	factory.FactoryRegistrySingleton().RegisterFactory("fixed_MinesLocator", domain.CreateFixedMinesLocator)
 
 	//dals
 	factory.FactoryRegistrySingleton().RegisterFactory("inmemory_GameDal", gamedal.CreateInMemoryGameDal)

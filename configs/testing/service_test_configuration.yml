@@ -4,32 +4,32 @@ root:
       board5x5x5:
         factory: "default_MinesweeperService" #si no esta definido usa el principal
         configuration:
-          bomblocator: "root.bomblocator.fixed5x5x5"
+          mineslocator: "root.mineslocator.fixed5x5x5"
           gamedal: "root.dals.gamedal.inmemory"
       board5x5x3:
         factory: "default_MinesweeperService" #si no esta definido usa el principal
         configuration:
-          bomblocator: "root.bomblocator.fixed5x5x3"
+          mineslocator: "root.mineslocator.fixed5x5x3"
           gamedal: "root.dals.gamedal.inmemory"
   dals:
     gamedal:
       inmemory:
         factory: "inmemory_GameDal"
 
-  bomblocator:
+  mineslocator:
     fixed5x5x5:
-      factory: "fixed_BombLocator"
+      factory: "fixed_MinesLocator"
       configuration:
-        bombs:
+        mines:
           - "0,0"
           - "0,4"
           - "4,0"
           - "4,4"
           - "2,2"
     fixed5x5x3:
-      factory: "fixed_BombLocator"
+      factory: "fixed_MinesLocator"
       configuration:
-        bombs:
+        mines:
           - "4,0"
           - "4,4"
           - "2,2"

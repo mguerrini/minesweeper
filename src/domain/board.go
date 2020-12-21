@@ -23,7 +23,7 @@ func NewBoard(rowCount, colCount int) Board {
 			RowCount:   rowCount,
 			ColCount:   colCount,
 			Cells:      cellDatas,
-			BombsCount: 0,
+			MinesCount: 0,
 		},
 		cells: cells,
 	}
@@ -48,7 +48,7 @@ func (this *Board) setCellNumbers()  {
 			cell:= this.getCell(row, col)
 
 			if cell.GetType() == shared.CellType_Empty {
-				count := this.getCountNeighboringBombs(cell)
+				count := this.getCountNeighboringMines(cell)
 
 				if count > 0 {
 					numberCell:= NewNumberCell(row, col, count)
@@ -59,7 +59,7 @@ func (this *Board) setCellNumbers()  {
 	}
 }
 
-func (this *Board) getCountNeighboringBombs(cell Cell) int {
+func (this *Board) getCountNeighboringMines(cell Cell) int {
 	celldata := cell.GetData()
 
 	fromRow := celldata.Row - 1
@@ -88,7 +88,7 @@ func (this *Board) getCountNeighboringBombs(cell Cell) int {
 	for row := fromRow; row <= toRow; row++ {
 		for col := fromCol; col <= toCol; col++ {
 			currCell := this.getCell(row, col)
-			if currCell.GetType() == shared.CellType_Bomb {
+			if currCell.GetType() == shared.CellType_Mine {
 				count++
 			}
 		}
@@ -131,8 +131,8 @@ func (this *Board) GetMaxCol() int{
 	return this.data.ColCount
 }
 
-func (this *Board) GetBombsCount() int{
-	return this.data.BombsCount
+func (this *Board) GetMinesCount() int{
+	return this.data.MinesCount
 }
 
 func (this *Board) GetRevealedCount() int{
@@ -166,20 +166,20 @@ func (this *Board) GetNotRevealedCount() int{
 }
 
 
-func (this *Board) SetBomb(row int, col int) bool {
+func (this *Board) SetMines(row int, col int) bool {
 	cell := this.getCell(row, col)
 
-	if cell.GetType() != shared.CellType_Bomb {
-		//convert this cell to bomb cell
-		this.setCell(row, col, NewBombCell(row, col))
-		this.data.BombsCount++
+	if cell.GetType() != shared.CellType_Mine {
+		//convert this cell to mine cell
+		this.setCell(row, col, NewMineCell(row, col))
+		this.data.MinesCount++
 		return true
 	}
 
 	return false
 }
 
-func (this *Board) revealBombs() {
+func (this *Board) revealMines() {
 	for row := 0; row<this.data.RowCount; row++{
 		for col := 0; col<this.data.ColCount; col++{
 			cell := this.getCell(row, col)

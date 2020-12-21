@@ -11,7 +11,7 @@ const(
 	GameStatus_Lost    = "GameStatus_Lost"
 	GameStatus_Won     = "GameStatus_Won"
 
-	CellType_Bomb    = "CellType_Bomb"
+	CellType_Mine    = "CellType_Mine"
 	CellType_Number  = "CellType_Number"
 	CellType_Empty   = "CellType_Empty"
 	CellType_Unknown = "CellType_Unknown"

@@ -69,7 +69,7 @@ func (this *cell) Reveal(board *Board) bool  {
 			if row >= 0 && row < board.GetMaxRow() && col >= 0 && col < board.GetMaxCol(){
 				nCell := board.getCell(row, col)
 
-				if nCell.GetType() != shared.CellType_Bomb {
+				if nCell.GetType() != shared.CellType_Mine {
 					nCell.Reveal(board)
 				}
 			}
@@ -179,18 +179,18 @@ func (this *markedCell) setRevealed(isRevealed bool)   {
 
 
 /***********************************/
-/*         Bomb Cell               */
+/*         Mine Cell               */
 /***********************************/
 
-type bombCell struct {
+type mineCell struct {
 	cell
 }
 
-func NewBombCell(row, col int) Cell {
-	return &bombCell{
+func NewMineCell(row, col int) Cell {
+	return &mineCell{
 		cell: cell{
 			data: shared.CellData{
-				Type:       shared.CellType_Bomb,
+				Type:       shared.CellType_Mine,
 				Row:        row,
 				Col:        col,
 				IsRevealed: false,
@@ -201,7 +201,7 @@ func NewBombCell(row, col int) Cell {
 	}
 }
 
-func (this *bombCell) Reveal(board *Board) bool {
+func (this *mineCell) Reveal(board *Board) bool {
 	if this.IsRevealed() {
 		return false
 	}
@@ -211,7 +211,7 @@ func (this *bombCell) Reveal(board *Board) bool {
 	return true
 }
 
-func (this *bombCell) Mark(board *Board, mark shared.CellMarkType)  {
+func (this *mineCell) Mark(board *Board, mark shared.CellMarkType)  {
 	this.doMark(board, this, mark)
 }
 

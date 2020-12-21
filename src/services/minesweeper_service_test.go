@@ -16,8 +16,8 @@ func servicesTestSetup() {
 	//service
 	factory.FactoryRegistrySingleton().RegisterFactory("default_MinesweeperService", CreateMinesweeperService)
 
-	//bomb locators
-	factory.FactoryRegistrySingleton().RegisterFactory("fixed_BombLocator", domain.CreateFixedBombLocator)
+	//mines locators
+	factory.FactoryRegistrySingleton().RegisterFactory("fixed_MinesLocator", domain.CreateFixedMinesLocator)
 
 	//dals
 	factory.FactoryRegistrySingleton().RegisterFactory("inmemory_GameDal", gamedal.CreateInMemoryGameDal)
@@ -46,7 +46,7 @@ func Test_CreateGameAndLost(t *testing.T) {
 	helpers.AssertErrorWithMsg(t,"Error getting game", err)
 	helpers.AssertTrue(t, game.Status == shared.GameStatus_Playing, "Expected game in Playing Status")
 
-	//Its a bomb
+	//Its a mine
 	game, err = service.RevealCell("user1", game.Id, 0,0)
 	helpers.AssertErrorWithMsg(t,"Error revealing cell 0, 0", err)
 	helpers.AssertTrue(t, game.Status == shared.GameStatus_Lost, "Expected game in Lost Status")
@@ -95,7 +95,7 @@ func Test_CreateGameAndWin(t *testing.T) {
 	helpers.AssertTrue(t, game.Status == shared.GameStatus_Won, "Expected game in Won Status")
 }
 
-func Test_CreateGameMarkBombsAndWin1(t *testing.T) {
+func Test_CreateGameMarkMinesAndWin1(t *testing.T) {
 	servicesTestSetup()
 
 	service, err := NewMinesweeperService("root.services.minesweeper.board5x5x5")

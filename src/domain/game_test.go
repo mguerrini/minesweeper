@@ -9,25 +9,25 @@ import (
 )
 
 func createGameFactory1() MinesweeperGameFactory {
-	bombLoc := NewFixedBombLocator()
+	mineLoc := NewFixedMineLocator()
 
-	bombLoc.AddBomb(0,0)
-	bombLoc.AddBomb(0,4)
-	bombLoc.AddBomb(4,0)
-	bombLoc.AddBomb(4,4)
-	bombLoc.AddBomb(2,2)
+	mineLoc.AddMine(0,0)
+	mineLoc.AddMine(0,4)
+	mineLoc.AddMine(4,0)
+	mineLoc.AddMine(4,4)
+	mineLoc.AddMine(2,2)
 
-	return NewMinesweeperGameFactory(bombLoc)
+	return NewMinesweeperGameFactory(mineLoc)
 }
 
 func createGameFactory2() MinesweeperGameFactory {
-	bombLoc := NewFixedBombLocator()
+	mineLoc := NewFixedMineLocator()
 
-	bombLoc.AddBomb(2,2)
-	bombLoc.AddBomb(4,0)
-	bombLoc.AddBomb(4,4)
+	mineLoc.AddMine(2,2)
+	mineLoc.AddMine(4,0)
+	mineLoc.AddMine(4,4)
 
-	return NewMinesweeperGameFactory(bombLoc)
+	return NewMinesweeperGameFactory(mineLoc)
 }
 
 func Test_CreateGame_GetData(t *testing.T) {
@@ -43,7 +43,7 @@ func Test_CreateGame_GetData(t *testing.T) {
 	helpers.AssertTrue(t, data.Status == shared.GameStatus_Created, "Expected game in Created Status")
 	helpers.AssertTrue(t, data.Board.RowCount == 5, "Expected 5 rows")
 	helpers.AssertTrue(t, data.Board.ColCount == 5, "Expected 5 cols")
-	helpers.AssertTrue(t, data.Board.BombsCount == 5, "Expected 5 bombs")
+	helpers.AssertTrue(t, data.Board.MinesCount == 5, "Expected 5 mines")
 	helpers.AssertTrue(t, len(data.Board.Cells) == 5, "Expected 5 cell per row")
 	helpers.AssertTrue(t, len(data.Board.Cells[0]) == 5, "Expected 5 cell in col 0")
 	helpers.AssertTrue(t, len(data.Board.Cells[1]) == 5, "Expected 5 cell in col 1")
@@ -51,12 +51,12 @@ func Test_CreateGame_GetData(t *testing.T) {
 	helpers.AssertTrue(t, len(data.Board.Cells[3]) == 5, "Expected 5 cell in col 3")
 	helpers.AssertTrue(t, len(data.Board.Cells[4]) == 5, "Expected 5 cell in col 4")
 
-	//check bombs
-	validateBombCell(t, &data, 0,0, false)
-	validateBombCell(t, &data, 0,4, false)
-	validateBombCell(t, &data, 4,0, false)
-	validateBombCell(t, &data, 4,4, false)
-	validateBombCell(t, &data, 2,2, false)
+	//check mines
+	validateMineCell(t, &data, 0,0, false)
+	validateMineCell(t, &data, 0,4, false)
+	validateMineCell(t, &data, 4,0, false)
+	validateMineCell(t, &data, 4,4, false)
+	validateMineCell(t, &data, 2,2, false)
 
 	//check numbers
 	validateNumberCell(t, &data, 0,1, 1, false)
@@ -169,7 +169,7 @@ func Test_LostGameCell(t *testing.T){
 	helpers.AssertTrue(t, game.data.FinishTime == time.Time{}, "Expected 0 finish time")
 	helpers.AssertTrue(t, game.data.Status == shared.GameStatus_Playing, "Expected game in Playing Status")
 
-	//reveal a bomb
+	//reveal a mine
 	err = game.RevealCell(2, 2)
 	helpers.AssertError(t, err)
 
@@ -185,8 +185,8 @@ func Test_LostGameCell(t *testing.T){
 	for row := range data.Board.Cells {
 		for col := range data.Board.Cells[row] {
 			if (row == 2 && col == 2) || (row == 4 && (col == 0 || col == 4)) {
-				//bomb
-				validateBombCell(t, &data, row, col, true)
+				//mine
+				validateMineCell(t, &data, row, col, true)
 			} else {
 				validateEmptyCell(t, &data, row, col, true)
 			}
@@ -218,8 +218,8 @@ func Test_WinGameCell(t *testing.T){
 	for row := range data.Board.Cells {
 		for col := range data.Board.Cells[row] {
 			if (row == 2 && col == 2) || (row == 4 && (col == 0 || col == 4)) {
-				//bomb
-				validateBombCell(t, &data, row, col, true)
+				//mine
+				validateMineCell(t, &data, row, col, true)
 			} else {
 				validateEmptyCell(t, &data, row, col, true)
 			}
@@ -231,7 +231,7 @@ func Test_MarkWithFlag(t *testing.T) {
 	factory := createGameFactory2()
 	game, _ := factory.CreateGame(5, 5, 3)
 
-	//mark a bomb with a falg and try to revealed
+	//mark a mine with a falg and try to revealed
 	err:=game.MarkCell(2,2, shared.CellMarkType_Flag)
 	helpers.AssertError(t, err)
 
@@ -244,7 +244,7 @@ func Test_MarkWithFlag(t *testing.T) {
 	validateUnknownCell(t, &data, 2, 2, false)
 	validateFlagMark(t, &data, 2, 2)
 
-	//try to reveal bomb...game not change
+	//try to reveal mine...game not change
 	err = game.RevealCell(2, 2)
 	helpers.AssertTrue(t, game.GetStatus() == shared.GameStatus_Playing, "Expected game in Playing Status")
 
@@ -264,16 +264,16 @@ func Test_MarkWithFlag(t *testing.T) {
 	validateUnknownCell(t, &data, 2, 2, false)
 	validateNoneMark(t, &data, 2, 2)
 
-	//reveal a bomb
+	//reveal a mine
 	err = game.RevealCell(2, 2)
 	helpers.AssertTrue(t, game.GetStatus() == shared.GameStatus_Lost, "Expected game in Lost Status")
 }
 
-func Test_MarkWithQuestionABomb(t *testing.T) {
+func Test_MarkWithQuestionAMine(t *testing.T) {
 	factory := createGameFactory2()
 	game, _ := factory.CreateGame(5, 5, 3)
 
-	//mark a bomb with a falg and try to revealed
+	//mark a mine with a falg and try to revealed
 	err:=game.MarkCell(2,2, shared.CellMarkType_Question)
 	helpers.AssertError(t, err)
 
@@ -286,7 +286,7 @@ func Test_MarkWithQuestionABomb(t *testing.T) {
 	validateUnknownCell(t, &data, 2, 2, false)
 	validateQuestionMark(t, &data, 2, 2)
 
-	//reveal a bomb
+	//reveal a mine
 	err = game.RevealCell(2, 2)
 	helpers.AssertTrue(t, game.GetStatus() == shared.GameStatus_Lost, "Expected game in Lost Status")
 }
@@ -295,7 +295,7 @@ func Test_MarkWithQuestionAnEmptyCell(t *testing.T) {
 	factory := createGameFactory2()
 	game, _ := factory.CreateGame(5, 5, 3)
 
-	//mark a bomb with a falg and try to revealed
+	//mark a mine with a falg and try to revealed
 	err:=game.MarkCell(0,0, shared.CellMarkType_Question)
 	helpers.AssertError(t, err)
 
@@ -308,7 +308,7 @@ func Test_MarkWithQuestionAnEmptyCell(t *testing.T) {
 	validateUnknownCell(t, &data, 0, 0, false)
 	validateQuestionMark(t, &data, 0, 0)
 
-	//reveal a bomb
+	//reveal a mine
 	err = game.RevealCell(0, 0)
 	data =game.GetData()
 	data.Board.HideNotRevealed()
@@ -321,7 +321,7 @@ func Test_MarkWithQuestionAnNumberCell(t *testing.T) {
 	factory := createGameFactory2()
 	game, _ := factory.CreateGame(5, 5, 3)
 
-	//mark a bomb with a falg and try to revealed
+	//mark a mine with a falg and try to revealed
 	err:=game.MarkCell(1,1, shared.CellMarkType_Question)
 	helpers.AssertError(t, err)
 
@@ -362,10 +362,10 @@ func validateUnknownCell(t *testing.T, game *shared.GameData, row, col int, isRe
 	helpers.AssertTrue(t, cellData.Type == shared.CellType_Unknown, fmt.Sprintf("Expected Cell Type == Unknown type for cell %d, %d", row, col))
 }
 
-func validateBombCell(t *testing.T, game *shared.GameData, row, col int, isRevealedExpectedValue bool) {
+func validateMineCell(t *testing.T, game *shared.GameData, row, col int, isRevealedExpectedValue bool) {
 	cellData := game.Board.GetCell(row, col)
 	helpers.AssertTrue(t, cellData.IsRevealed == isRevealedExpectedValue, fmt.Sprintf("Expected IsRevealed == %t for cell %d, %d", isRevealedExpectedValue, row, col))
-	helpers.AssertTrue(t, cellData.Type == shared.CellType_Bomb, fmt.Sprintf("Expected Cell Type == Bomb type for cell %d, %d", row, col))
+	helpers.AssertTrue(t, cellData.Type == shared.CellType_Mine, fmt.Sprintf("Expected Cell Type == Mine type for cell %d, %d", row, col))
 }
 
 func validateFlagMark(t *testing.T, game *shared.GameData, row, col int) {

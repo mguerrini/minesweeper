@@ -8,14 +8,14 @@ import (
 )
 
 type MinesweeperServiceConfiguration struct {
-	BombLocatorConfigurationName string `json:"bomblocator"`
-	GameDalConfigurationName     string `json:"gamedal"`
+	MinesLocatorConfigurationName string `json:"mineslocator"`
+	GameDalConfigurationName      string `json:"gamedal"`
 }
 
 
 //Factory Method
 func CreateMinesweeperService (configurationName string) (interface{}, error) {
-	var bombLocator domain.BombLocator
+	var minesLocator domain.MinesLocator
 	var gameDal gamedal.GameDal
 
 	//if configuration is not defined, search for default configuration.
@@ -35,14 +35,14 @@ func CreateMinesweeperService (configurationName string) (interface{}, error) {
 			return nil, err
 		}
 
-		if len(conf.BombLocatorConfigurationName) == 0 {
-			bombLocator = domain.NewRandomBombLocator()
+		if len(conf.MinesLocatorConfigurationName) == 0 {
+			minesLocator = domain.NewRandomMinesLocator()
 		} else {
-			bombLocObj, err :=	factory.GenericFactorySingleton().Create(conf.BombLocatorConfigurationName)
+			minesLocObj, err :=	factory.GenericFactorySingleton().Create(conf.MinesLocatorConfigurationName)
 			if err != nil {
 				return nil, err
 			}
-			bombLocator = bombLocObj.(domain.BombLocator)
+			minesLocator = minesLocObj.(domain.MinesLocator)
 		}
 
 		if len(conf.GameDalConfigurationName) == 0 {
@@ -61,7 +61,7 @@ func CreateMinesweeperService (configurationName string) (interface{}, error) {
 
 	//set gamefactory and dal
 	output := &minesweeperService {}
-	output.gameFactory = domain.NewMinesweeperGameFactory(bombLocator)
+	output.gameFactory = domain.NewMinesweeperGameFactory(minesLocator)
 	output.gameDal = gameDal
 
 	return output, nil
@@ -94,11 +94,11 @@ func createDefaultMinesweeperService() (MinesweeperService, error){
 	if (err != nil) {
 		return nil, err
 	}
-	bombLocator := domain.NewRandomBombLocator()
+	minesLocator := domain.NewRandomMinesLocator()
 
 	//set gamefactory and dal
 	output := &minesweeperService {}
-	output.gameFactory = domain.NewMinesweeperGameFactory(bombLocator)
+	output.gameFactory = domain.NewMinesweeperGameFactory(minesLocator)
 	output.gameDal = gameDal
 
 	return output, nil
