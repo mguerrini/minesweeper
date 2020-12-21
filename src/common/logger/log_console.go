@@ -13,6 +13,11 @@ func NewConsoleLog() *consoleLog {
 	return &consoleLog{}
 }
 
+func CreateConsoleLog (configurationName string) (interface{}, error) {
+	return NewConsoleLog(), nil
+}
+
+
 func (this *consoleLog) Info(msg string) {
 	fmt.Fprint(os.Stdout, "[INFO] " + msg + "\n")
 }

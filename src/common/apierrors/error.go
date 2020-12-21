@@ -60,15 +60,15 @@ func (e *ApiError) GetError() string {
 func (e *ApiError) AsString() string {
 	if len(e.error) == 0 {
 		if len(e.GetMessage()) == 0 {
-			return fmt.Sprintf("{[code: %s - %s]}", e.code, e.status, e.GetMessage())
+			return fmt.Sprintf("{[code: %d - %s]}", e.code, e.status)
 		} else {
-			return fmt.Sprintf("{[code: %s - %s] message: %s}", e.code, e.status, e.GetMessage())
+			return fmt.Sprintf("{[code: %d - %s] message: %s}", e.code, e.status, e.GetMessage())
 		}
 	} else {
 		if len(e.GetMessage()) == 0 {
-			return fmt.Sprintf("{[code: %s - %s] error: %s}", e.code, e.status, e.GetMessage(), e.GetError())
+			return fmt.Sprintf("{[code: %d - %s] error: %s}", e.code, e.status, e.GetError())
 		} else {
-			return fmt.Sprintf("{[code: %s - %s] message: %s, error: %s}", e.code, e.status, e.GetMessage(), e.GetError())
+			return fmt.Sprintf("{[code: %d - %s] message: %s, error: %s}", e.code, e.status, e.GetMessage(), e.GetError())
 		}
 	}
 }

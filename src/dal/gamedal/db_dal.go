@@ -9,7 +9,6 @@ type GameDbDal struct {
 	connectionString string
 }
 
-
 func CreateDbGameDal(configurationName string) (interface{}, error){
 	cnn, err := configs.Singleton().GetString(configurationName + ".connectionstring")
 
@@ -19,26 +18,36 @@ func CreateDbGameDal(configurationName string) (interface{}, error){
 	return &GameDbDal{connectionString: cnn}, nil
 }
 
-
-func (g GameDbDal) GetGameById(userId, gameId string) (*domain.Game, error) {
-	panic("implement me")
-}
-
-func (g GameDbDal) GetGameListByUserId(userId string) ([]domain.Game, error) {
-	panic("implement me")
-}
-
-func (g GameDbDal) InsertGame(userId string, game *domain.Game) (domain.Game, error) {
-	panic("implement me")
-}
-
-func (g GameDbDal) UpdateGame(game *domain.Game) (domain.Game, error) {
-	panic("implement me")
-}
-
 func NewDbGameDal(factoryConfigurationName string) (GameDal, error) {
 	return &GameDbDal{}, nil
 }
+
+
+func (this GameDbDal) GetGameById(userId string, gameId string) (*domain.Game, error) {
+	panic("implement me")
+}
+
+func (this GameDbDal) GetGameListByUserId(userId string) ([]*domain.Game, error) {
+	panic("implement me")
+}
+
+func (this GameDbDal) InsertGame(userId string, game *domain.Game) (*domain.Game, error) {
+	panic("implement me")
+}
+
+func (this GameDbDal) UpdateGame(game *domain.Game) (*domain.Game, error) {
+	panic("implement me")
+}
+
+func (this GameDbDal) DeleteGame(userId string, gameId string) error {
+	panic("implement me")
+}
+
+func (this GameDbDal) DeleteAllGames(userId string) error {
+	panic("implement me")
+}
+
+
 
 
 

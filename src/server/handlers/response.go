@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/minesweeper/src/common/logger"
 	"net/http"
-	"strconv"
 )
 
 
@@ -18,7 +17,7 @@ func HandleResponse(c *gin.Context) error {
 	}
 
 	logRequestAndResponse(c)
-	
+
 	if response, exists := c.Get("response"); exists {
 		statusCode := http.StatusOK
 		if code, exists := c.Get("status_code"); exists {
@@ -53,51 +52,15 @@ func logRequestAndResponse(c *gin.Context) {
 	//RESPONSE
 	output, _ := c.Get("response")
 
-	if output == nil {
-		logger.Info(fmt.Sprintf("Response Body: nil"))
-		return
+	if output != nil {
+		bsRes, errRes := json.Marshal(output);
+
+		if errRes == nil {
+			buf := bytes.NewBuffer(bsRes)
+			resStr = buf.String()
+		}
 	}
-
-	bsRes, errRes := json.Marshal(output);
-
-	if errRes == nil {
-		buf := bytes.NewBuffer(bsRes)
-		resStr = buf.String()
-	}
-
 
 	//LOG
 	logger.Info(fmt.Sprintf("{\"request\": %s, \"response\": %s }", reqStr, resStr))
 }
-
-func logResponse(c *gin.Context) {
-	//busco el parametro X-Traced
-	var tracedEnabled bool = false
-
-	tracedStr := c.GetHeader("X-Traced")
-
-	if tracedStr != "" {
-		var errTrace error
-		if tracedEnabled, errTrace = strconv.ParseBool(tracedStr); errTrace != nil {
-			tracedEnabled = false
-		}
-	}
-
-	if tracedEnabled  {
-		output, _ := c.Get("response")
-
-		if output == nil {
-			logger.Info(fmt.Sprintf("Response Body: nil"))
-			return
-		}
-
-		bs, err := json.Marshal(output);
-
-		if err == nil {
-			buf := bytes.NewBuffer(bs)
-			body := buf.String()
-			logger.Info(fmt.Sprintf("Response Body: %s", body))
-		}
-	}
-}
-
