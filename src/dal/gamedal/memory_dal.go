@@ -7,7 +7,7 @@ import (
 )
 
 type GameInMemoryDal struct {
-	userGames []UserGame
+	userGames []*UserGame
 	mutex     *sync.Mutex
 
 }
@@ -19,7 +19,7 @@ type UserGame struct {
 
 func NewInMemoryGameDal(factoryConfigurationName string) GameDal {
 	output := &GameInMemoryDal{
-		userGames: make([]UserGame, 0),
+		userGames: make([]*UserGame, 0),
 		mutex:     &sync.Mutex{},
 	}
 	return output
@@ -33,41 +33,42 @@ func CreateInMemoryGameDal(configurationName string) (interface{}, error){
 
 
 
-func (this *GameInMemoryDal) GetGameById(userId, gameId string) *domain.Game {
+func (this *GameInMemoryDal) GetGameById(userId, gameId string) (*domain.Game, error) {
 	this.mutex.Lock()
 	defer this.mutex.Unlock()
 
 	for _, user := range this.userGames {
 		if user.Game.GetId() == gameId && user.UserId == userId{
 			output := user.Game
-			return &output
+			return &output, nil
 		}
 	}
 
-	return nil
+	return nil, nil
 }
 
-func (this * GameInMemoryDal) GetGameListByUserId(userId string) []domain.Game {
+func (this * GameInMemoryDal) GetGameListByUserId(userId string) ([]domain.Game, error) {
 	panic("implement me")
 }
 
-func (this * GameInMemoryDal) InsertGame(userId string, game *domain.Game) domain.Game {
+func (this * GameInMemoryDal) InsertGame(userId string, game *domain.Game) (domain.Game, error) {
 	this.mutex.Lock()
 	defer this.mutex.Unlock()
 
 	id := guid.New().String()
 	game.SetId(id)
 
-	for _, user := range this.userGames {
-		if user.Game.GetId() == game.GetId() {
-			user.Game = *game
-		}
+	reg := UserGame{
+		UserId: userId,
+		Game:   *game,
 	}
 
-	return *game
+	this.userGames = append(this.userGames, &reg)
+
+	return *game,nil
 }
 
-func (this *GameInMemoryDal) UpdateGame(game *domain.Game) domain.Game {
+func (this *GameInMemoryDal) UpdateGame(game *domain.Game) (domain.Game, error) {
 
 	this.mutex.Lock()
 	defer this.mutex.Unlock()
@@ -78,7 +79,6 @@ func (this *GameInMemoryDal) UpdateGame(game *domain.Game) domain.Game {
 		}
 	}
 
-	return *game
+	return *game, nil
 }
-
 

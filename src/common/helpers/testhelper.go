@@ -27,6 +27,12 @@ func AssertError (t *testing.T, err error){
 	}
 }
 
+func AssertErrorWithMsg (t *testing.T, msg string, err error){
+	if err != nil {
+		t.Error(msg, err)
+		t.FailNow()
+	}
+}
 
 
 

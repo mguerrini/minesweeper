@@ -8,7 +8,10 @@ import (
 )
 
 type MinesweeperService interface {
-
+	NewGame(userId string, row, col int, bombsCount int) (*shared.GameData, error)
+	RevealCell(userId string, gameId string, row, col int) (*shared.GameData, error)
+	MarkCell(userId string, gameId string, row, col int, mark shared.CellMarkType) (*shared.GameData, error)
+	GetGame(userId string, gameId string) (*shared.GameData, error)
 }
 
 
@@ -27,9 +30,27 @@ func (this *minesweeperService) NewGame(userId string, row, col int, bombsCount 
 	}
 
 	//save it
-	savedGame := this.gameDal.InsertGame(userId, game)
+	savedGame, err := this.gameDal.InsertGame(userId, game)
+	if err != nil {
+		return nil, err
+	}
+
 
 	//get data of the game
+	data := savedGame.GetData()
+
+	data.Board.HideNotRevealed()
+
+	return &data, nil
+}
+
+func (this *minesweeperService) GetGame(userId string, gameId string) (*shared.GameData, error){
+	//get game
+	savedGame, err := this.gameDal.GetGameById(userId, gameId)
+	if err != nil {
+		return nil, err
+	}
+
 	data := savedGame.GetData()
 
 	data.Board.HideNotRevealed()
@@ -40,14 +61,18 @@ func (this *minesweeperService) NewGame(userId string, row, col int, bombsCount 
 
 func (this *minesweeperService) RevealCell(userId string, gameId string, row, col int) (*shared.GameData, error){
 
-	//save it
-	savedGame := this.gameDal.GetGameById(userId, gameId)
+	//get game
+	savedGame, err := this.gameDal.GetGameById(userId, gameId)
+	if err != nil {
+		return nil, err
+	}
+
 
 	if savedGame == nil {
 		return nil, errors.New("The gameid is invalid")
 	}
 
-	err := savedGame.RevealCell(row, col)
+	err = savedGame.RevealCell(row, col)
 
 	if err != nil {
 		return nil, err
@@ -72,13 +97,16 @@ func (this *minesweeperService) RevealCell(userId string, gameId string, row, co
 func (this *minesweeperService) MarkCell(userId string, gameId string, row, col int, mark shared.CellMarkType) (*shared.GameData, error){
 
 	//save it
-	savedGame := this.gameDal.GetGameById(userId, gameId)
+	savedGame, err := this.gameDal.GetGameById(userId, gameId)
+	if err != nil {
+		return nil, err
+	}
 
 	if savedGame == nil {
 		return nil, errors.New("The gameid is invalid")
 	}
 
-	err := savedGame.MarkCell(row, col, mark)
+	err = savedGame.MarkCell(row, col, mark)
 
 	if err != nil {
 		return nil, err

@@ -1,7 +1,10 @@
 package domain
 
 import (
+	"github.com/minesweeper/src/common/configs"
 	"math/rand"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -59,7 +62,7 @@ type FixedBombLocator struct {
 }
 
 type fixedBombLocatorConfiguration struct {
-	bombs []string `json:"bombs"`
+	Bombs []string `json:"bombs"`
 }
 
 type boadCoordinate struct {
@@ -75,8 +78,30 @@ func NewFixedBombLocator() *FixedBombLocator {
 
 func CreateFixedBombLocator (configurationName string) (interface{}, error) {
 	//get configuration
+	conf := fixedBombLocatorConfiguration{}
+	configs.Singleton().GetObject(configurationName, &conf)
 
-	return NewFixedBombLocator(), nil
+	output := NewFixedBombLocator()
+	if conf.Bombs != nil {
+		for _, valStr := range conf.Bombs {
+			separator := strings.Index(valStr, ",")
+			rowStr := valStr[:separator]
+			colStr := valStr[separator+1:]
+
+			row, err := strconv.Atoi(rowStr)
+			if err != nil {
+				return nil, err
+			}
+			col, err := strconv.Atoi(colStr)
+			if err != nil {
+				return nil, err
+			}
+
+			output.AddBomb(row, col)
+		}
+	}
+
+	return output, nil
 }
 
 func (this *FixedBombLocator) AddBomb(row, col int)  {

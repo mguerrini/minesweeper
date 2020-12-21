@@ -3,12 +3,13 @@ package services
 import (
 	"github.com/minesweeper/src/common/configs"
 	"github.com/minesweeper/src/common/factory"
+	"github.com/minesweeper/src/common/helpers"
 	"github.com/minesweeper/src/dal/gamedal"
 	"github.com/minesweeper/src/domain"
 	"testing"
 )
 
-func servicesTestSetup() {
+func factoryServicesTestSetup() {
 	//service
 	factory.FactoryRegistrySingleton().RegisterFactory("default_MinesweeperService", CreateMinesweeperService)
 
@@ -22,52 +23,47 @@ func servicesTestSetup() {
 }
 
 func Test_CreateMinesweeperSingleton_FromConfiguration1(t *testing.T) {
-	servicesTestSetup()
+	factoryServicesTestSetup()
 
 	service, err := NewMinesweeperService("root.services.minesweeper.default")
 
-	if err != nil {
-		t.Error("Error creating Minesweeper Service: ", err)
-	}
+	helpers.AssertErrorWithMsg(t, "Error creating Minesweeper Service: ", err)
 
 	validateServiceWithDbDal(t, service)
 }
 
 func Test_CreateMinesweeperSingleton_FromConfiguration2(t *testing.T) {
-	servicesTestSetup()
+	factoryServicesTestSetup()
 
 	service, err := NewMinesweeperService("root.services.minesweeper.local")
 
-	if err != nil {
-		t.Error("Error creating Minesweeper Service: ", err)
-	}
+	helpers.AssertErrorWithMsg(t, "Error creating Minesweeper Service: ", err)
+
 	validateServiceWithInMemoryDal(t, service)
 }
 
 //Test creating passing empty configuration name
 func Test_CreateMinesweeperSingleton_Default1(t *testing.T) {
-	servicesTestSetup()
+	factoryServicesTestSetup()
 
 	//try to build service with configuration name
 	service1, err1 := NewMinesweeperService("")
-	if err1 != nil {
-		t.Error("Error creating Minesweeper Service: ", err1)
-	}
+	helpers.AssertErrorWithMsg(t, "Error creating Minesweeper Service: ", err1)
+
 	validateServiceWithDbDal(t, service1)
 }
 
 //Test creating with not existent configuration
 func Test_CreateMinesweeperSingleton_Default2(t *testing.T) {
-	servicesTestSetup()
+	factoryServicesTestSetup()
 
 	//clean the configuration
 	configs.Singleton().Clean()
 
 	//try to build service with configuration name
 	service1, err1 := NewMinesweeperService("root.services.minesweeper.default")
-	if err1 != nil {
-		t.Error("Error creating Minesweeper Service: ", err1)
-	}
+	helpers.AssertErrorWithMsg(t, "Error creating Minesweeper Service: ", err1)
+
 	validateServiceWithDbDal(t, service1)
 }
 
@@ -75,40 +71,26 @@ func Test_CreateMinesweeperSingleton_Default2(t *testing.T) {
 
 func validateServiceWithDbDal(t *testing.T, service MinesweeperService) {
 
-	if service == nil {
-		t.Error("Error creating Minesweeper Service: Service nil")
-	}
+	helpers.AssertTrue(t, service != nil, "Error creating Minesweeper Service: Service nil")
 
 	//validate that is created with the correct components
 	realType, ok := service.(*minesweeperService)
 
-	if !ok {
-		t.Error("The Minesweeper Service is not of type *minesweeperService")
-	}
+	helpers.AssertTrue(t, ok, "The Minesweeper Service is not of type *minesweeperService")
 
 	_, ok = realType.gameDal.(*gamedal.GameDbDal)
-
-	if !ok {
-		t.Error("The GameDal of the Minesweeper Service is not of type *GameDbDal")
-	}
+	helpers.AssertTrue(t, ok, "The GameDal of the Minesweeper Service is not of type *GameDbDal")
 }
 
 func validateServiceWithInMemoryDal(t *testing.T, service MinesweeperService) {
 
-	if service == nil {
-		t.Error("Error creating Minesweeper Service: Service nil")
-	}
+	helpers.AssertTrue(t, service != nil, "Error creating Minesweeper Service: Service nil")
 
 	//validate that is created with the correct components
 	realType, ok := service.(*minesweeperService)
 
-	if !ok {
-		t.Error("The Minesweeper Service is not of type *minesweeperService")
-	}
+	helpers.AssertTrue(t, ok, "The Minesweeper Service is not of type *minesweeperService")
 
 	_, ok = realType.gameDal.(*gamedal.GameInMemoryDal)
-
-	if !ok {
-		t.Error("The GameDal of the Minesweeper Service is not of type *GameInMemoryDal")
-	}
+	helpers.AssertTrue(t, ok, "The GameDal of the Minesweeper Service is not of type *GameInMemoryDal")
 }

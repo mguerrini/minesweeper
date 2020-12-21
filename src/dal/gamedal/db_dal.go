@@ -20,19 +20,19 @@ func CreateDbGameDal(configurationName string) (interface{}, error){
 }
 
 
-func (g GameDbDal) GetGameById(userId, gameId string) *domain.Game {
+func (g GameDbDal) GetGameById(userId, gameId string) (*domain.Game, error) {
 	panic("implement me")
 }
 
-func (g GameDbDal) GetGameListByUserId(userId string) []domain.Game {
+func (g GameDbDal) GetGameListByUserId(userId string) ([]domain.Game, error) {
 	panic("implement me")
 }
 
-func (g GameDbDal) InsertGame(userId string, game *domain.Game) domain.Game {
+func (g GameDbDal) InsertGame(userId string, game *domain.Game) (domain.Game, error) {
 	panic("implement me")
 }
 
-func (g GameDbDal) UpdateGame(game *domain.Game) domain.Game {
+func (g GameDbDal) UpdateGame(game *domain.Game) (domain.Game, error) {
 	panic("implement me")
 }
 

@@ -69,7 +69,8 @@ func CreateMinesweeperService (configurationName string) (interface{}, error) {
 
 func NewMinesweeperService(factoryConfigurationName string) (MinesweeperService, error) {
 	if len(factoryConfigurationName) == 0 {
-		return CreateMinesweeperService("")
+		output, err := CreateMinesweeperService("")
+		return output.(MinesweeperService), err
 	}
 
 	instance, err := factory.GenericFactorySingleton().Create(factoryConfigurationName)
