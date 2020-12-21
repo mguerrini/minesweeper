@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/minesweeper/src/common/apierrors"
 	"github.com/minesweeper/src/common/helpers"
 	"github.com/olebedev/config"
 	"os"
@@ -164,7 +165,7 @@ func (this *configurationManager) IsNil(path string)  bool {
 
 func (this *configurationManager) GetString(path string)  (string, error) {
 	if this.cfg == nil {
-		return "", errors.New("The configuration is not loaded")
+		return "", apierrors.NewInternalServerError(nil, "The configuration is not loaded")
 	}
 
 	return this.cfg.String(path)

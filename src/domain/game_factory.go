@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"errors"
+	"github.com/minesweeper/src/common/apierrors"
 )
 
 type MinesweeperGameFactory interface {
@@ -19,15 +19,15 @@ func NewMinesweeperGameFactory(locator BombLocator) MinesweeperGameFactory {
 func (this *minesweeperGameFactory) CreateGame(rowCount, colCount int, bombCount int) (*Game, error){
 
 	if rowCount == 0 || colCount == 0 {
-		return nil, errors.New("Row and Column size can not be 0 or less")
+		return nil, apierrors.NewBadRequest(nil, "Row and Column size can not be 0 or less")
 	}
 
 	if bombCount == 0 {
-		return nil, errors.New("The count of bombs must be greater than 0")
+		return nil, apierrors.NewBadRequest(nil, "The count of bombs must be greater than 0")
 	}
 
 	if rowCount * bombCount <= bombCount {
-		return nil, errors.New("The count of bombs can not be greater than the count of cells")
+		return nil, apierrors.NewBadRequest(nil, "The count of bombs can not be greater than the count of cells")
 	}
 
 	//create new game

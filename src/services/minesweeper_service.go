@@ -1,7 +1,7 @@
 package services
 
 import (
-	"errors"
+	"github.com/minesweeper/src/common/apierrors"
 	"github.com/minesweeper/src/dal/gamedal"
 	"github.com/minesweeper/src/domain"
 	"github.com/minesweeper/src/shared"
@@ -69,7 +69,7 @@ func (this *minesweeperService) RevealCell(userId string, gameId string, row, co
 
 
 	if savedGame == nil {
-		return nil, errors.New("The gameid is invalid")
+		return nil, apierrors.NewBadRequest(nil, "The gameid is invalid")
 	}
 
 	err = savedGame.RevealCell(row, col)
@@ -103,7 +103,7 @@ func (this *minesweeperService) MarkCell(userId string, gameId string, row, col 
 	}
 
 	if savedGame == nil {
-		return nil, errors.New("The gameid is invalid")
+		return nil, apierrors.NewBadRequest(nil, "The gameid is invalid")
 	}
 
 	err = savedGame.MarkCell(row, col, mark)

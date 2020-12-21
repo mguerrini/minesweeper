@@ -1,7 +1,7 @@
 package factory
 
 import (
-	"errors"
+	"github.com/minesweeper/src/common/apierrors"
 	"github.com/minesweeper/src/common/configs"
 )
 
@@ -18,7 +18,7 @@ func NewGenericFactory() GenericFactory {
 
 func (this *genericfactory) Create(factoryConfigurationName string) (interface{}, error) {
 	if len(factoryConfigurationName) == 0 {
-		return nil, errors.New("The name of the configuration can not be empty")
+		return nil, apierrors.NewBadRequest(nil, "The name of the configuration can not be empty")
 	}
 
 	factoryNameRef := factoryConfigurationName + ".factory"

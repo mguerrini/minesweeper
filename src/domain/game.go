@@ -1,8 +1,8 @@
 package domain
 
 import (
-	"errors"
 	"fmt"
+	"github.com/minesweeper/src/common/apierrors"
 	"github.com/minesweeper/src/shared"
 	"time"
 )
@@ -82,7 +82,7 @@ func (this *Game) SetBomb(row int, col int) (bool, error) {
 		return this.board.SetBomb(row, col), nil
 	}
 
-	return false, errors.New("The game is started, can not add more bombs")
+	return false, apierrors.NewBadRequest(nil, "The game is started, can not add more bombs")
 }
 
 func (this *Game) RevealCell(row int, col int) error {
@@ -144,7 +144,7 @@ func (this *Game) startGame () error  {
 		return nil
 	}
 
-	return errors.New("The game is finished!")
+	return apierrors.NewBadRequest(nil, "The game is finished!")
 }
 
 func (this *Game) gameOver (won bool) {
@@ -163,11 +163,11 @@ func (this *Game) gameOver (won bool) {
 
 func (this *Game) areInRange(row int, col int) error {
 	if row < 0 || row >= this.board.data.RowCount {
-		return errors.New(fmt.Sprintf("Invalid row number. Its must be between 0 and %d", this.board.data.RowCount))
+		return apierrors.NewBadRequest(nil, fmt.Sprintf("Invalid row number. Its must be between 0 and %d", this.board.data.RowCount))
 	}
 
 	if col < 0 || col >= this.board.data.ColCount {
-		return errors.New(fmt.Sprintf("Invalid col number. Its must be between 0 and %d", this.board.data.ColCount))
+		return apierrors.NewBadRequest(nil, fmt.Sprintf("Invalid col number. Its must be between 0 and %d", this.board.data.ColCount))
 	}
 
 	return nil
