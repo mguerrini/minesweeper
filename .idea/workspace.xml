@@ -47,7 +47,7 @@
       <recent name="$PROJECT_DIR$/src/common/configs" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Test.go test src">
+  <component name="RunManager" selected="Go Test.go test minesweeper">
     <configuration name="Test_CreateGame_GetData in github.com/minesweeper/src/domain" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="minesweeper" />
       <working_directory value="$PROJECT_DIR$/src/domain" />
@@ -59,17 +59,6 @@
       <pattern value="^\QTest_CreateGame_GetData\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="Test_CreateMinesweeperSingleton_Default2 in github.com/minesweeper/src/services" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="minesweeper" />
-      <working_directory value="$PROJECT_DIR$/src/services" />
-      <framework value="gotest" />
-      <kind value="PACKAGE" />
-      <package value="github.com/minesweeper/src/services" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <pattern value="^\QTest_CreateMinesweeperSingleton_Default2\E$" />
-      <method v="2" />
-    </configuration>
     <configuration name="game_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="minesweeper" />
       <working_directory value="$PROJECT_DIR$/src/domain" />
@@ -78,6 +67,16 @@
       <package value="github.com/minesweeper" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$/src/domain/game_test.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go test minesweeper" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="minesweeper" />
+      <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <kind value="DIRECTORY" />
+      <package value="github.com/minesweeper" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
     <configuration name="go test src" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -102,11 +101,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.go test minesweeper" />
         <item itemvalue="Go Test.go test src" />
         <item itemvalue="Go Test.minesweeper_test.go" />
         <item itemvalue="Go Test.game_test.go" />
         <item itemvalue="Go Test.Test_CreateGame_GetData in github.com/minesweeper/src/domain" />
-        <item itemvalue="Go Test.Test_CreateMinesweeperSingleton_Default2 in github.com/minesweeper/src/services" />
       </list>
     </recent_temporary>
   </component>

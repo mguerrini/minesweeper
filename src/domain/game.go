@@ -90,16 +90,9 @@ func (this *Game) RevealCell(row int, col int) error {
 		return err
 	}
 
-	//if is the first cell exposed => start clock
-	count := this.board.GetRevealedCount()
-
-	if count == 0 {
-		this.data.StartTime = time.Now()
-		this.data.Status = shared.GameStatus_Playing
-	}
-
-	if this.data.Status != shared.GameStatus_Playing {
-		return errors.New("The game is not started!")
+	err := this.startGame()
+	if err != nil {
+		return err
 	}
 
 	cell := this.board.getCell(row, col)
@@ -121,6 +114,39 @@ func (this *Game) RevealCell(row int, col int) error {
 	return nil
 }
 
+func (this *Game) MarkCell(row int, col int, mark shared.CellMarkType) error {
+	if err := this.areInRange(row, col); err != nil {
+		return err
+	}
+
+	err := this.startGame()
+	if err != nil {
+		return err
+	}
+
+	cell := this.board.getCell(row, col)
+
+	cell.Mark(&this.board, mark)
+
+	return nil
+}
+
+
+
+
+func (this *Game) startGame () error  {
+
+	if this.data.Status == shared.GameStatus_Playing {
+		return nil
+	} else if this.data.Status == shared.GameStatus_Created {
+		this.data.StartTime = time.Now()
+		this.data.Status = shared.GameStatus_Playing
+		return nil
+	}
+
+	return errors.New("The game is finished!")
+}
+
 func (this *Game) gameOver (won bool) {
 	//revelead all cell and leave only de bombs
 	this.data.FinishTime = time.Now()
@@ -133,32 +159,6 @@ func (this *Game) gameOver (won bool) {
 	}
 
 	this.board.revealBombs()
-}
-
-
-func (this *Game) MarkCell(row int, col int, mark shared.CellMarkType) error {
-	if err := this.areInRange(row, col); err != nil {
-		return err
-	}
-
-
-	//if is the first cell exposed => start clock
-	count := this.board.GetRevealedCount()
-
-	if count == 0 {
-		this.data.StartTime = time.Now()
-		this.data.Status = shared.GameStatus_Playing
-	}
-
-	if this.data.Status != shared.GameStatus_Playing {
-		return errors.New("The game is not started!")
-	}
-
-	cell := this.board.getCell(row, col)
-
-	cell.Mark(&this.board, mark)
-
-	return nil
 }
 
 func (this *Game) areInRange(row int, col int) error {

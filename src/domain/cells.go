@@ -80,7 +80,11 @@ func (this *cell) Reveal(board *Board) bool  {
 }
 
 func (this *cell) Mark(board *Board, mark shared.CellMarkType)  {
-	if this.IsRevealed() {
+	this.doMark(board, this, mark)
+}
+
+func (this *cell) doMark(board *Board, toMark Cell, mark shared.CellMarkType)  {
+	if toMark.IsRevealed() {
 		return
 	}
 
@@ -89,11 +93,13 @@ func (this *cell) Mark(board *Board, mark shared.CellMarkType)  {
 	}
 
 	//change cell
-	mCell := NewMarkedCell(this)
-	board.setCell(this.data.Row, this.data.Col, mCell)
+	mCell := NewMarkedCell(toMark)
+	innerData := toMark.GetData()
+	board.setCell(innerData.Row, innerData.Col, mCell)
 
 	mCell.Mark(board, mark)
 }
+
 
 func (this *cell) setMark(mark shared.CellMarkType)   {
 	this.data.Mark = mark
@@ -137,26 +143,38 @@ func (this *markedCell) IsMarked () bool {
 }
 
 func (this *markedCell) Reveal(board *Board) bool  {
-	if this.data.Mark == shared.CellMarkType_Flag {
+	innerData := this.markedCell.GetData()
+
+	if innerData.Mark == shared.CellMarkType_Flag {
 		return false
 	}
 
-	output := this.markedCell.Reveal(board)
-
-	//change de cell in the board
-	innerData := this.markedCell.GetData()
+	//change de cell in the board.....put the original cell and clean the mark
+	this.markedCell.setMark(shared.CellMarkType_None)
 	board.setCell(innerData.Row, innerData.Col, this.markedCell)
+
+	//then reveal de new cell
+	output := this.markedCell.Reveal(board)
 
 	return output
 }
 
 func (this *markedCell) Mark(board *Board, mark shared.CellMarkType)  {
+	//put the mark in the cell
+	this.markedCell.setMark(mark)
+
 	if mark == shared.CellMarkType_None {
 		innerData := this.markedCell.GetData()
 		board.setCell(innerData.Row, innerData.Col, this.markedCell)
-	} else {
-		this.markedCell.setMark(mark)
 	}
+}
+
+func (this *markedCell) setMark(mark shared.CellMarkType)   {
+	this.markedCell.setMark(mark)
+}
+
+func (this *markedCell) setRevealed(isRevealed bool)   {
+	this.markedCell.setRevealed(isRevealed)
 }
 
 
@@ -193,6 +211,11 @@ func (this *bombCell) Reveal(board *Board) bool {
 	return true
 }
 
+func (this *bombCell) Mark(board *Board, mark shared.CellMarkType)  {
+	this.doMark(board, this, mark)
+}
+
+
 /***********************************/
 /*         Number Cell               */
 /***********************************/
@@ -226,6 +249,9 @@ func (this *numberCell) Reveal(board *Board) bool {
 	return false
 }
 
+func (this *numberCell) Mark(board *Board, mark shared.CellMarkType)  {
+	this.doMark(board, this, mark)
+}
 
 
 
