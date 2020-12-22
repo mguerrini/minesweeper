@@ -2,22 +2,22 @@ package domain
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/minesweeper/src/common/apierrors"
 	"github.com/minesweeper/src/shared"
-	"time"
 )
 
 type Game struct {
-	data shared.GameData
+	data  shared.GameData
 	board Board
 }
-
 
 func NewGame(rowCount, colCount int, minesCount int, minesLocator MinesLocator) (Game, error) {
 	board := NewBoard(rowCount, colCount)
 
 	game := Game{
-		data:  shared.GameData{
+		data: shared.GameData{
 			Id:         "",
 			StartTime:  time.Time{},
 			FinishTime: time.Time{},
@@ -37,44 +37,41 @@ func NewGame(rowCount, colCount int, minesCount int, minesLocator MinesLocator) 
 	return game, nil
 }
 
-
 func (this *Game) GetId() string {
 	return this.data.Id
 }
 
-func (this *Game) SetId(id string)  {
+func (this *Game) SetId(id string) {
 	this.data.Id = id
 }
 
 func (this *Game) GetRowCount() int {
-	return this.data.Board.RowCount
+	return this.board.GetMaxRow()
 }
 
 func (this *Game) GetStatus() shared.GameStatusType {
 	return this.data.Status
 }
 
-func (this *Game) GetColCount() int  {
-	return this.data.Board.ColCount
+func (this *Game) GetColCount() int {
+	return this.board.GetMaxCol()
 }
-
 
 func (this *Game) GetData() shared.GameData {
 	copy := this.data
 
 	//complete fields
-	copy.Board = this.board.getData();
+	copy.Board = this.board.getData()
 
 	return copy
 }
 
-
-func (this *Game) IsFinished() bool  {
+func (this *Game) IsFinished() bool {
 	return this.data.Status == shared.GameStatus_Lost || this.data.Status == shared.GameStatus_Won
 }
 
 func (this *Game) SetMines(row int, col int) (bool, error) {
-	if err :=this.areInRange(row, col); err != nil {
+	if err := this.areInRange(row, col); err != nil {
 		return false, err
 	}
 
@@ -99,7 +96,7 @@ func (this *Game) RevealCell(row int, col int) error {
 
 	isMine := cell.Reveal(&this.board)
 
-	if isMine	{
+	if isMine {
 		//game end
 		this.gameOver(false)
 	}
@@ -131,10 +128,7 @@ func (this *Game) MarkCell(row int, col int, mark shared.CellMarkType) error {
 	return nil
 }
 
-
-
-
-func (this *Game) startGame () error  {
+func (this *Game) startGame() error {
 
 	if this.data.Status == shared.GameStatus_Playing {
 		return nil
@@ -147,7 +141,7 @@ func (this *Game) startGame () error  {
 	return apierrors.NewBadRequest(nil, "The game is finished!")
 }
 
-func (this *Game) gameOver (won bool) {
+func (this *Game) gameOver(won bool) {
 	//revelead all cell and leave only de mines
 	this.data.FinishTime = time.Now()
 
@@ -172,4 +166,3 @@ func (this *Game) areInRange(row int, col int) error {
 
 	return nil
 }
-

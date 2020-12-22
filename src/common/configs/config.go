@@ -4,21 +4,21 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
+	folder "path"
+
 	"github.com/minesweeper/src/common/apierrors"
 	"github.com/minesweeper/src/common/helpers"
 	"github.com/olebedev/config"
-	"os"
-	folder "path"
 )
 
 type ConfigurationManager interface {
 	Exist(path string) bool
-	IsNil(path string)  bool
+	IsNil(path string) bool
 	Clean()
 	GetObject(path string, emptyObj interface{}) error
 	GetString(path string) (string, error)
 }
-
 
 type configurationManager struct {
 	cfg *config.Config
@@ -27,7 +27,6 @@ type configurationManager struct {
 type configEnvelope struct {
 	Root interface{} `json:"Root"`
 }
-
 
 func (this *configurationManager) GetBasePath() string {
 	return os.Getenv("GOPATH")
@@ -38,12 +37,11 @@ func (this *configurationManager) GetConfigPath() string {
 	if confDir == "" {
 		base := os.Getenv("GOPATH")
 		confDir = folder.Join(base, "src/github.com/minesweeper/configs")
-		fmt.Fprintf(os.Stdout, "CONF_DIR env variable was not set, use default: "+ confDir +"\n")
+		fmt.Fprintf(os.Stdout, "CONF_DIR env variable was not set, use default: "+confDir+"\n")
 	}
 
 	return confDir
 }
-
 
 //Load a file and join it with thw existent configuration
 func (this *configurationManager) Load(path string, file string) {
@@ -94,7 +92,7 @@ func (this *configurationManager) validateFile(path string, file string) string 
 		}
 
 		//try in base go path
-		//path = this.GetBasePath()
+		path = this.GetBasePath()
 		fileAux2 := folder.Join(path, file)
 		if this.fileExists(fileAux2) {
 			return fileAux2
@@ -107,12 +105,22 @@ func (this *configurationManager) validateFile(path string, file string) string 
 			panic(err)
 		}
 
-		fileAux3 := folder.Join(path, wd)
+		fileAux3 := folder.Join(wd, file)
 		if this.fileExists(fileAux3) {
 			return fileAux3
 		}
 
-		panic(errors.New("The configuracion file " + file + " not exist. Look in: "  + fileAux1 + " - " + fileAux2 + " - " + fileAux3))
+		fileAux4 := folder.Join(wd, "..\\configs", file)
+		if this.fileExists(fileAux4) {
+			return fileAux4
+		}
+
+		fileAux5 := folder.Join(wd, "configs", file)
+		if this.fileExists(fileAux5) {
+			return fileAux5
+		}
+
+		panic(errors.New("The configuracion file " + file + " not exist. Look in:\n" + fileAux1 + " \n" + fileAux2 + "\n" + fileAux3 + "\n" + fileAux4 + "\n" + fileAux5))
 	}
 
 	//uso el path
@@ -123,7 +131,6 @@ func (this *configurationManager) validateFile(path string, file string) string 
 
 	return fileAux
 }
-
 
 func (this *configurationManager) fileExists(filename string) bool {
 	info, err := os.Stat(filename)
@@ -137,7 +144,7 @@ func (this *configurationManager) Clean() {
 	this.cfg = nil
 }
 
-func (this *configurationManager) Exist(path string)  (bool) {
+func (this *configurationManager) Exist(path string) bool {
 	if this.cfg == nil {
 		return false
 	}
@@ -146,9 +153,7 @@ func (this *configurationManager) Exist(path string)  (bool) {
 	return err == nil
 }
 
-
-
-func (this *configurationManager) IsNil(path string)  bool {
+func (this *configurationManager) IsNil(path string) bool {
 	if this.cfg == nil {
 		return true
 	}
@@ -162,8 +167,7 @@ func (this *configurationManager) IsNil(path string)  bool {
 	return val.Root == nil
 }
 
-
-func (this *configurationManager) GetString(path string)  (string, error) {
+func (this *configurationManager) GetString(path string) (string, error) {
 	if this.cfg == nil {
 		return "", apierrors.NewInternalServerError(nil, "The configuration is not loaded")
 	}
@@ -171,12 +175,10 @@ func (this *configurationManager) GetString(path string)  (string, error) {
 	return this.cfg.String(path)
 }
 
-
-func (this *configurationManager) GetObject(path string, configType interface{})  error {
+func (this *configurationManager) GetObject(path string, configType interface{}) error {
 	if this.cfg == nil {
 		return errors.New("The configuration is not loaded")
 	}
-
 
 	newConfig, err := this.cfg.Get(path)
 
@@ -214,4 +216,3 @@ func (this *configurationManager) GetObject(path string, configType interface{})
 
 	return nil
 }
-
