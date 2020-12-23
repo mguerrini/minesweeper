@@ -12,12 +12,13 @@ func main(){
 
 	//start server
 	engine := server.New()
-	logger.Info("Listening and serving HTTP on port 8080")
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "5000"
 	}
 
-	engine.Run(port)
+	logger.Info("Listening and serving HTTP on port " + port)
+
+	engine.Run(":" + port)
 }
