@@ -1,4 +1,7 @@
 root:
+  startup:
+    minesweeper: "root.services.minesweeper.board5x5x3"
+
   services:
     minesweeper:
       board5x5x5:
