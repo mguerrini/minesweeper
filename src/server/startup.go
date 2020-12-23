@@ -13,8 +13,8 @@ var (
 )
 
 
-func StartUp() {
-	configs.Initialize("local_configuration.yml")
+func StartUp(configurationFileName string) {
+	configs.Initialize(configurationFileName)
 
 	RegisterFactories()
 

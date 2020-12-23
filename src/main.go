@@ -7,7 +7,7 @@ import (
 
 func main(){
 	//prepare server
-	server.StartUp()
+	server.StartUp("local_configuration.yml")
 
 	//start server
 	engine := server.New()
