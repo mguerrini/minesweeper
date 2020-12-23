@@ -10,6 +10,8 @@ import (
 )
 
 func factoryServicesTestSetup() {
+	configs.Initialize("testing/unit_test_configuration.yml")
+
 	//service
 	factory.FactoryRegistrySingleton().RegisterFactory("default_MinesweeperService", CreateMinesweeperService)
 
