@@ -48,12 +48,22 @@ func logRequestAndResponse(c *gin.Context) {
 	//REQUEST
 	input, _ := c.Get("request")
 
-	bsReq, errReq := json.Marshal(input);
-
+	var reqMap map[string]interface{}
+	reqStr, _ = input.(string) // json.Marshal(input);
+	json.Unmarshal([]byte(reqStr), &reqMap);
+	bsReq, _ := json.Marshal(reqMap)
+	reqStr = string(bsReq)
+/*
+	bsReq, _ := input.(string) // json.Marshal(input);
+	bsReq = strings.Replace(bsReq, "\n", "", -1)
+	reqStr = bsReq
+*/
+/*
 	if errReq == nil {
 		buf := bytes.NewBuffer(bsReq)
 		reqStr = buf.String()
 	}
+*/
 
 	//RESPONSE
 	output, _ := c.Get("response")
